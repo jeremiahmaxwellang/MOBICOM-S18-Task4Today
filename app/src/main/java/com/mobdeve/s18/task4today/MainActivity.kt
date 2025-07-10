@@ -3,7 +3,6 @@ package com.mobdeve.s18.task4today
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mobdeve.s18.task4today.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +21,7 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_tasks -> replaceFragment(TaskListFragment())
                 R.id.nav_calendar -> replaceFragment(CalendarFragment())
-                R.id.nav_blank -> replaceFragment(BlankFragment())
+                R.id.nav_blank -> replaceFragment(SettingsFragment())
             }
             true
         }
