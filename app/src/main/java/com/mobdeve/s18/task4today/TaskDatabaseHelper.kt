@@ -41,28 +41,32 @@ class TaskDatabaseHelper(context: Context) :
                 $COLUMN_TASK_TITLE TEXT,
                 $COLUMN_TASK_TIME TEXT,
                 $COLUMN_TASK_IS_CHECKED INTEGER,
-                FOREIGN KEY($COLUMN_TASK_HEADER_ID) REFERENCES $TABLE_HEADER($COLUMN_HEADER_ID)
+                FOREIGN KEY($COLUMN_TASK_HEADER_ID) REFERENCES $TABLE_HEADER($COLUMN_HEADER_ID) ON DELETE CASCADE
             );
         """.trimIndent()
+        // Added ON DELETE CASCADE to ensure tasks are deleted when a header is deleted
 
         db.execSQL(createHeaderTable)
         db.execSQL(createTaskTable)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        // This is primarily for schema changes. For a full reset, use resetDatabase().
         db.execSQL("DROP TABLE IF EXISTS $TABLE_TASK")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_HEADER")
         onCreate(db)
     }
 
+    // Insert header and return the unique headerId
     fun insertHeader(title: String, color: String): Long {
         val values = ContentValues().apply {
             put(COLUMN_HEADER_TITLE, title)
             put(COLUMN_HEADER_COLOR, color)
         }
-        return writableDatabase.insert(TABLE_HEADER, null, values)
+        return writableDatabase.insert(TABLE_HEADER, null, values)  // Auto-generated unique headerId
     }
 
+    // Insert task under the specific header
     fun insertTask(headerId: Long, title: String, time: String, isChecked: Boolean): Long {
         val values = ContentValues().apply {
             put(COLUMN_TASK_HEADER_ID, headerId)
@@ -70,9 +74,10 @@ class TaskDatabaseHelper(context: Context) :
             put(COLUMN_TASK_TIME, time)
             put(COLUMN_TASK_IS_CHECKED, if (isChecked) 1 else 0)
         }
-        return writableDatabase.insert(TABLE_TASK, null, values)
+        return writableDatabase.insert(TABLE_TASK, null, values)  // Insert task under the correct header
     }
 
+    // Check if the database is empty
     fun isEmpty(): Boolean {
         val cursor = readableDatabase.rawQuery("SELECT COUNT(*) FROM $TABLE_HEADER", null)
         cursor.moveToFirst()
@@ -81,16 +86,20 @@ class TaskDatabaseHelper(context: Context) :
         return count == 0
     }
 
+    // Get all headers and their tasks
     fun getAllItems(): List<ListItem> {
         val db = readableDatabase
         val result = mutableListOf<ListItem>()
 
+        // Query all headers
         val headerCursor = db.rawQuery("SELECT * FROM $TABLE_HEADER", null)
         while (headerCursor.moveToNext()) {
             val headerId = headerCursor.getLong(headerCursor.getColumnIndexOrThrow(COLUMN_HEADER_ID))
             val headerTitle = headerCursor.getString(headerCursor.getColumnIndexOrThrow(COLUMN_HEADER_TITLE))
-            result.add(ListItem.Header(headerTitle))
+            val headerColor = headerCursor.getString(headerCursor.getColumnIndexOrThrow(COLUMN_HEADER_COLOR)) // Get color
+            result.add(ListItem.Header(headerId, headerTitle, headerColor))  // Add header with unique headerId and color
 
+            // Query tasks for the current header
             val taskCursor = db.rawQuery(
                 "SELECT * FROM $TABLE_TASK WHERE $COLUMN_TASK_HEADER_ID = ?",
                 arrayOf(headerId.toString())
@@ -99,7 +108,7 @@ class TaskDatabaseHelper(context: Context) :
                 val title = taskCursor.getString(taskCursor.getColumnIndexOrThrow(COLUMN_TASK_TITLE))
                 val time = taskCursor.getString(taskCursor.getColumnIndexOrThrow(COLUMN_TASK_TIME))
                 val isChecked = taskCursor.getInt(taskCursor.getColumnIndexOrThrow(COLUMN_TASK_IS_CHECKED)) == 1
-                result.add(ListItem.Task(title, time, isChecked))
+                result.add(ListItem.Task(title, time, isChecked))  // Add task under the correct header
             }
             taskCursor.close()
         }

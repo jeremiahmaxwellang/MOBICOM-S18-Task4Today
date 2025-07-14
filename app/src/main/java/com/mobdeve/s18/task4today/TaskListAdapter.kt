@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class TaskListAdapter(
-    private val items: List<ListItem>,
-    private val showAddTaskDialog: () -> Unit // Function to show add task dialog
+    private var items: MutableList<ListItem>,  // MutableList for easy updates
+    private val showAddTaskDialog: (Long) -> Unit // Accepts headerId to show the dialog
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -31,7 +31,7 @@ class TaskListAdapter(
             VIEW_TYPE_HEADER -> {
                 val view = inflater.inflate(R.layout.fragment_task_list_header, parent, false)
                 HeaderViewHolder(view).apply {
-                    bind(items[0] as ListItem.Header, showAddTaskDialog) // Correctly pass the function here
+                    bind(items[0] as ListItem.Header, showAddTaskDialog) // Pass headerId here
                 }
             }
             VIEW_TYPE_TASK -> {
@@ -42,7 +42,7 @@ class TaskListAdapter(
         }
     }
 
-
+    // Implement the onBindViewHolder method
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = items[position]) {
             is ListItem.Header -> (holder as HeaderViewHolder).bind(item, showAddTaskDialog)
@@ -50,22 +50,20 @@ class TaskListAdapter(
         }
     }
 
-    override fun getItemCount(): Int = items.size
-
+    // HeaderViewHolder class
     class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.headerTitle)
         private val addButton: ImageView = itemView.findViewById(R.id.headerAddButton)
 
-        fun bind(header: ListItem.Header, showAddTaskDialog: () -> Unit) {
+        fun bind(header: ListItem.Header, showAddTaskDialog: (Long) -> Unit) {
             title.text = header.title
             addButton.setOnClickListener {
-                // Open the add task dialog when the button is clicked
-                showAddTaskDialog()
+                showAddTaskDialog(header.headerId)
             }
         }
     }
 
-
+    // TaskViewHolder class
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val checkBox: CheckBox = itemView.findViewById(R.id.taskCheckBox)
         private val time: TextView = itemView.findViewById(R.id.taskTime)
@@ -76,9 +74,17 @@ class TaskListAdapter(
             time.text = task.time
 
             checkBox.setOnCheckedChangeListener { _, isChecked ->
-                // Optional: update state, call callback, etc.
-                // Example: Toast.makeText(itemView.context, "${task.title} is ${if (isChecked) "done" else "not done"}", Toast.LENGTH_SHORT).show()
+                // Optional: update the state, call callback, etc.
             }
         }
+    }
+
+    override fun getItemCount(): Int = items.size
+
+    // Method to update the data and notify the adapter
+    fun updateData(newItems: List<ListItem>) {
+        items.clear()  // Clear existing items
+        items.addAll(newItems)  // Add the new items
+        notifyDataSetChanged()  // Notify adapter that data has changed
     }
 }

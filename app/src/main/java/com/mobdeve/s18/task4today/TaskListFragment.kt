@@ -16,6 +16,9 @@ class TaskListFragment : Fragment() {
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var adapter: TaskListAdapter  // Define adapter at the class level
+    private lateinit var dbHelper: TaskDatabaseHelper // Declare dbHelper at class level
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,27 +30,19 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dbHelper = TaskDatabaseHelper(requireContext())
+        dbHelper = TaskDatabaseHelper(requireContext()) // Initialize dbHelper
 
-        // Insert sample data only if DB is empty
+        // Initial population of sample data if the database is empty
         if (dbHelper.isEmpty()) {
-            val mobicomId = dbHelper.insertHeader("MOBICOM", "#FF5722")
-            dbHelper.insertTask(mobicomId, "Complete report", "9:00 AM", false)
-            dbHelper.insertTask(mobicomId, "Submit summary", "11:00 AM", true)
-
-            val itsecId = dbHelper.insertHeader("ITSECWB", "#3F51B5")
-            dbHelper.insertTask(itsecId, "Review logs", "2:00 PM", false)
+            populateSampleData()
         }
 
-        // Load from DB
-        val data = dbHelper.getAllItems()
+        loadAndDisplayTasks()
 
-        val adapter = TaskListAdapter(data) {
-            showAddTaskDialog(dbHelper) // Pass the function to show the add task dialog
-        }
-
-        binding.taskRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.taskRecyclerView.adapter = adapter
+        // For resetDbButton
+        // binding.root.findViewById<Button>(R.id.resetDbButton)?.setOnClickListener {
+        //     resetAndRepopulateDatabase()
+        // }
 
         binding.prevDayBtn.setOnClickListener {
             Toast.makeText(requireContext(), "Previous day", Toast.LENGTH_SHORT).show()
@@ -58,7 +53,33 @@ class TaskListFragment : Fragment() {
         }
     }
 
-    private fun showAddTaskDialog(dbHelper: TaskDatabaseHelper) {
+    private fun populateSampleData() {
+        val mobicomId = dbHelper.insertHeader("MOBICOM", "#FF5722")
+        dbHelper.insertTask(mobicomId, "Complete report", "9:00 AM", false)
+        dbHelper.insertTask(mobicomId, "Submit summary", "11:00 AM", true)
+
+        val itsecId = dbHelper.insertHeader("ITSECWB", "#3F51B5")
+        dbHelper.insertTask(itsecId, "Review logs", "2:00 PM", false)
+        Toast.makeText(requireContext(), "Sample data populated!", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun loadAndDisplayTasks() {
+        // Load from DB
+        val data = dbHelper.getAllItems().toMutableList() // Convert to mutable list
+
+        // Initialize the adapter if not already initialized, or update its data
+        if (!::adapter.isInitialized) {
+            adapter = TaskListAdapter(data) { headerId ->
+                showAddTaskDialog(headerId, dbHelper)
+            }
+            binding.taskRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+            binding.taskRecyclerView.adapter = adapter
+        } else {
+            adapter.updateData(data)
+        }
+    }
+
+    private fun showAddTaskDialog(headerId: Long, dbHelper: TaskDatabaseHelper) {
         // Inflate and show the overlay dialog
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.overlay_add_task, null)
         val dialog = android.app.AlertDialog.Builder(requireContext())
@@ -87,18 +108,19 @@ class TaskListFragment : Fragment() {
             val ampm = if (amButton.isChecked) "AM" else "PM"
             val time = "$hour:00 $ampm"
 
-            if (name.isNotEmpty() && hour.isNotEmpty()) {
-                // Save to database
-                val headerId = dbHelper.insertHeader("New Group", "#FF4081") // Example: "New Group"
+            if (name.isNotEmpty() && hour.isNotEmpty() && (amButton.isChecked || pmButton.isChecked)) { // Ensure AM/PM is selected
+                // Save the task to the correct header group in the database
                 dbHelper.insertTask(headerId, name, time, false)
 
                 Toast.makeText(requireContext(), "Task added: $name at $time", Toast.LENGTH_SHORT).show()
 
-                (binding.taskRecyclerView.adapter as TaskListAdapter).notifyDataSetChanged()
+                // Reload tasks in RecyclerView under the correct header
+                val updatedData = dbHelper.getAllItems()
+                adapter.updateData(updatedData)  // Update the data in the adapter
 
                 dialog.dismiss()
             } else {
-                Toast.makeText(requireContext(), "Please complete all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Please complete all fields and select AM/PM", Toast.LENGTH_SHORT).show()
             }
         }
 

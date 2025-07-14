@@ -24,7 +24,17 @@
         android:id="@+id/headerAddButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:contentDescription="Add"
+        android:contentDescription="Add Task"
         android:src="@drawable/ic_add"
         android:tint="@color/white" />
+
+    <!--
+    <Button
+        android:id="@+id/resetDbButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset DB" />
+
+    Database Reset Button -->
+
 </LinearLayout>
