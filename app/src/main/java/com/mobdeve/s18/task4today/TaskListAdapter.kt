@@ -8,8 +8,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class TaskListAdapter(private val items: List<ListItem>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class TaskListAdapter(
+    private val items: List<ListItem>,
+    private val showAddTaskDialog: () -> Unit // Function to show add task dialog
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
         const val VIEW_TYPE_HEADER = 0
@@ -28,7 +30,9 @@ class TaskListAdapter(private val items: List<ListItem>) :
         return when (viewType) {
             VIEW_TYPE_HEADER -> {
                 val view = inflater.inflate(R.layout.fragment_task_list_header, parent, false)
-                HeaderViewHolder(view)
+                HeaderViewHolder(view).apply {
+                    bind(items[0] as ListItem.Header, showAddTaskDialog) // Correctly pass the function here
+                }
             }
             VIEW_TYPE_TASK -> {
                 val view = inflater.inflate(R.layout.fragment_task_list_item, parent, false)
@@ -38,9 +42,10 @@ class TaskListAdapter(private val items: List<ListItem>) :
         }
     }
 
+
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = items[position]) {
-            is ListItem.Header -> (holder as HeaderViewHolder).bind(item)
+            is ListItem.Header -> (holder as HeaderViewHolder).bind(item, showAddTaskDialog)
             is ListItem.Task -> (holder as TaskViewHolder).bind(item)
         }
     }
@@ -51,13 +56,15 @@ class TaskListAdapter(private val items: List<ListItem>) :
         private val title: TextView = itemView.findViewById(R.id.headerTitle)
         private val addButton: ImageView = itemView.findViewById(R.id.headerAddButton)
 
-        fun bind(header: ListItem.Header) {
+        fun bind(header: ListItem.Header, showAddTaskDialog: () -> Unit) {
             title.text = header.title
             addButton.setOnClickListener {
-                // TODO: Handle add task under this header
+                // Open the add task dialog when the button is clicked
+                showAddTaskDialog()
             }
         }
     }
+
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val checkBox: CheckBox = itemView.findViewById(R.id.taskCheckBox)
