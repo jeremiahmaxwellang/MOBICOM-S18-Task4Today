@@ -52,13 +52,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="8dp"
         android:gravity="center_vertical">
 
         <!-- Hour input -->
         <EditText
             android:id="@+id/hourInput"
-            android:layout_width="48dp"
+            android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:background="@color/overlay_background"
             android:gravity="center"
@@ -79,32 +78,36 @@
             android:textSize="14sp" />
 
         <!-- Minute (fixed to 00) -->
-        <TextView
-            android:id="@+id/minuteText"
-            android:layout_width="48dp"
+        <EditText
+            android:id="@+id/minutesInput"
+            android:layout_width="45dp"
             android:layout_height="wrap_content"
             android:background="@color/overlay_background"
             android:gravity="center"
-            android:text="00"
+            android:hint="00"
+            android:inputType="number"
             android:textColor="@color/text_secondary"
             android:textSize="16sp" />
 
         <!-- AM Button -->
         <ToggleButton
             android:id="@+id/amButton"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@color/overlay_background"
+            android:background="@drawable/rounded_button"
             android:checked="true"
+            android:textColor="@color/white"
             android:textOff="AM"
             android:textOn="AM" />
 
         <!-- PM Button -->
         <ToggleButton
             android:id="@+id/pmButton"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="wrap_content"
-            android:background="@color/overlay_background"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/rounded_button"
+            android:textColor="@color/white"
             android:textOff="PM"
             android:textOn="PM" />
     </LinearLayout>

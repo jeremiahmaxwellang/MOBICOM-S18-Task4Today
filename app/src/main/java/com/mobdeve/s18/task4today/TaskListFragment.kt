@@ -89,26 +89,46 @@ class TaskListFragment : Fragment() {
 
         val taskNameInput = dialogView.findViewById<EditText>(R.id.taskNameInput)
         val hourInput = dialogView.findViewById<EditText>(R.id.hourInput)
+        val minutesInput = dialogView.findViewById<EditText>(R.id.minutesInput)
         val amButton = dialogView.findViewById<android.widget.ToggleButton>(R.id.amButton)
         val pmButton = dialogView.findViewById<android.widget.ToggleButton>(R.id.pmButton)
         val confirmButton = dialogView.findViewById<Button>(R.id.confirmButton)
         val cancelButton = dialogView.findViewById<Button>(R.id.cancelButton)
 
-        // Make AM/PM mutually exclusive
+        // Initialize AM/PM buttons with highlighting
         amButton.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) pmButton.isChecked = false
-        }
-        pmButton.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) amButton.isChecked = false
+            if (isChecked) {
+                pmButton.isChecked = false
+                amButton.setBackgroundColor(resources.getColor(R.color.toggle_checked)) // Highlight selected
+                pmButton.setBackgroundColor(resources.getColor(R.color.toggle_unchecked)) // Reset other button
+            }
         }
 
+        pmButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                amButton.isChecked = false
+                pmButton.setBackgroundColor(resources.getColor(R.color.toggle_checked)) // Highlight selected
+                amButton.setBackgroundColor(resources.getColor(R.color.toggle_unchecked)) // Reset other button
+            }
+        }
+
+        // Confirm button functionality
         confirmButton.setOnClickListener {
             val name = taskNameInput.text.toString().trim()
             val hour = hourInput.text.toString().trim().padStart(2, '0')
+            val minutes = minutesInput.text.toString().trim().padStart(2, '0')
             val ampm = if (amButton.isChecked) "AM" else "PM"
-            val time = "$hour:00 $ampm"
 
-            if (name.isNotEmpty() && hour.isNotEmpty() && (amButton.isChecked || pmButton.isChecked)) { // Ensure AM/PM is selected
+            // Validate the minutes input (should be between 0 and 59)
+            val minutesInt = minutes.toIntOrNull()
+            if (minutesInt == null || minutesInt !in 0..59) {
+                Toast.makeText(requireContext(), "Please enter a valid minute between 00 and 59", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val time = "$hour:$minutes $ampm" // Updated to include minutes
+
+            if (name.isNotEmpty() && hour.isNotEmpty() && minutes.isNotEmpty() && (amButton.isChecked || pmButton.isChecked)) {
                 // Save the task to the correct header group in the database
                 dbHelper.insertTask(headerId, name, time, false)
 
@@ -124,6 +144,7 @@ class TaskListFragment : Fragment() {
             }
         }
 
+        // Cancel button functionality-
         cancelButton.setOnClickListener {
             dialog.dismiss()
         }
