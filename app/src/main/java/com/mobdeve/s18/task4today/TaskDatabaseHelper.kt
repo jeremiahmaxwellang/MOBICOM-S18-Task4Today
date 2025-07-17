@@ -18,7 +18,7 @@ class TaskDatabaseHelper(context: Context) :
         const val COLUMN_HEADER_COLOR = "color"
 
         const val TABLE_TASK = "task"
-        const val COLUMN_TASK_ID = "id"[]
+        const val COLUMN_TASK_ID = "id"
         const val COLUMN_TASK_HEADER_ID = "header_id"
         const val COLUMN_TASK_TITLE = "title"
         const val COLUMN_TASK_TIME = "time"
