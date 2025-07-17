@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Task4Today</string>
+
+    <string-array name="header_color_names">
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Yellow</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Indigo</item>
+        <item>Violet</item>
+        <item>White</item>
+    </string-array>
+
+    <string-array name="header_colors">
+        <item>#FF6961</item> <!-- Pastel Red -->
+        <item>##FFC067</item> <!-- Pastel Orange -->
+        <item>#77DD77</item> <!-- Pastel Green -->
+        <item>#85A1F2</item> <!-- Pastel Blue -->
+        <item>#8686AF</item> <!-- Pastel Indigo -->
+        <item>#cb99c9</item> <!-- Pastel Violet -->
+        <item>#FFFFFF</item> <!-- White -->
+    </string-array>
+
 </resources>
