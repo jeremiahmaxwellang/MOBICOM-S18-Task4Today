@@ -38,6 +38,24 @@
         android:textColor="#000000"
         android:textColorHint="#888888" />
 
+    <!-- Color Selection Label -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Select Color"
+        android:textSize="16sp"
+        android:textColor="#000000" />
+
+    <!-- Color Selection Spinner -->
+    <Spinner
+        android:id="@+id/colorSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/overlay_background"
+        android:spinnerMode="dropdown" />
+
     <!-- Confirm / Cancel Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,7 +82,7 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:backgroundTint="@color/green_confirm"
-            android:text="Confirm"
+            android:text="Update"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 </LinearLayout>
