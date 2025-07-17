@@ -30,9 +30,7 @@ class TaskListAdapter(
         return when (viewType) {
             VIEW_TYPE_HEADER -> {
                 val view = inflater.inflate(R.layout.fragment_task_list_header, parent, false)
-                HeaderViewHolder(view).apply {
-                    bind(items[0] as ListItem.Header, showAddTaskDialog) // Pass headerId here
-                }
+                HeaderViewHolder(view)
             }
             VIEW_TYPE_TASK -> {
                 val view = inflater.inflate(R.layout.fragment_task_list_item, parent, false)
@@ -42,7 +40,6 @@ class TaskListAdapter(
         }
     }
 
-    // Implement the onBindViewHolder method
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = items[position]) {
             is ListItem.Header -> (holder as HeaderViewHolder).bind(item, showAddTaskDialog)
@@ -50,7 +47,6 @@ class TaskListAdapter(
         }
     }
 
-    // HeaderViewHolder class
     class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val title: TextView = itemView.findViewById(R.id.headerTitle)
         private val addButton: ImageView = itemView.findViewById(R.id.headerAddButton)
@@ -63,7 +59,6 @@ class TaskListAdapter(
         }
     }
 
-    // TaskViewHolder class
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val checkBox: CheckBox = itemView.findViewById(R.id.taskCheckBox)
         private val time: TextView = itemView.findViewById(R.id.taskTime)
@@ -72,19 +67,21 @@ class TaskListAdapter(
             checkBox.text = task.title
             checkBox.isChecked = task.isChecked
             time.text = task.time
-
-            checkBox.setOnCheckedChangeListener { _, isChecked ->
-                // Optional: update the state, call callback, etc.
-            }
         }
     }
 
     override fun getItemCount(): Int = items.size
 
-    // Method to update the data and notify the adapter
+    // Update data in adapter
     fun updateData(newItems: List<ListItem>) {
-        items.clear()  // Clear existing items
-        items.addAll(newItems)  // Add the new items
-        notifyDataSetChanged()  // Notify adapter that data has changed
+        items.clear()
+        items.addAll(newItems)
+        notifyDataSetChanged()
+    }
+
+    // Add tasks to the existing header
+    fun addTasks(newTasks: List<ListItem.Task>) {
+        items.addAll(newTasks)
+        notifyDataSetChanged()
     }
 }

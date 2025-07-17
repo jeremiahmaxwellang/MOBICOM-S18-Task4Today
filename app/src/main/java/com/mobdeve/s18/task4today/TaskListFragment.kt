@@ -8,8 +8,9 @@ import android.widget.EditText
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.databinding.FragmentTaskListBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TaskListFragment : Fragment() {
 
@@ -18,6 +19,7 @@ class TaskListFragment : Fragment() {
 
     private lateinit var adapter: TaskListAdapter  // Define adapter at the class level
     private lateinit var dbHelper: TaskDatabaseHelper // Declare dbHelper at class level
+    var currentDate: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,60 +29,85 @@ class TaskListFragment : Fragment() {
         return binding.root
     }
 
+    private fun getPreviousDate(date: String): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val currentDate = sdf.parse(date)
+        val calendar = Calendar.getInstance()
+        calendar.time = currentDate
+        calendar.add(Calendar.DAY_OF_YEAR, -1)  // Go back one day
+        return sdf.format(calendar.time)
+    }
+
+    private fun updateDateLabel() {
+        val sdf = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
+        val formattedDate = sdf.format(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(currentDate)!!)
+        binding.dateLabel.text = formattedDate
+    }
+
+    private fun getNextDate(date: String): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val currentDate = sdf.parse(date)
+        val calendar = Calendar.getInstance()
+        calendar.time = currentDate
+        calendar.add(Calendar.DAY_OF_YEAR, 1)  // Go forward one day
+        return sdf.format(calendar.time)
+    }
+
+    private fun loadAndDisplayTasks() {
+        // Ensure headers are loaded once
+        if (adapter.itemCount == 0) {
+            val headers = dbHelper.getAllItems().filterIsInstance<ListItem.Header>()
+            adapter.updateData(headers)
+        }
+
+        // Load tasks for the current date
+        val tasks = dbHelper.getTasksForDate(currentDate).filterIsInstance<ListItem.Task>()
+        adapter.addTasks(tasks)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dbHelper = TaskDatabaseHelper(requireContext()) // Initialize dbHelper
+        dbHelper = TaskDatabaseHelper(requireContext())
 
-        // Initial population of sample data if the database is empty
+        // Initialize adapter
+        adapter = TaskListAdapter(mutableListOf()) { headerId -> showAddTaskDialog(headerId, dbHelper) }
+        binding.taskRecyclerView.adapter = adapter
+
+        // If database is empty, populate with sample data
         if (dbHelper.isEmpty()) {
             populateSampleData()
         }
 
         loadAndDisplayTasks()
-
-        // For resetDbButton
-        // binding.root.findViewById<Button>(R.id.resetDbButton)?.setOnClickListener {
-        //     resetAndRepopulateDatabase()
-        // }
+        updateDateLabel()
 
         binding.prevDayBtn.setOnClickListener {
-            Toast.makeText(requireContext(), "Previous day", Toast.LENGTH_SHORT).show()
+            currentDate = getPreviousDate(currentDate)
+            loadAndDisplayTasks()
+            updateDateLabel()
+            Toast.makeText(requireContext(), "Previous day: $currentDate", Toast.LENGTH_SHORT).show()
         }
 
         binding.nextDayBtn.setOnClickListener {
-            Toast.makeText(requireContext(), "Next day", Toast.LENGTH_SHORT).show()
+            currentDate = getNextDate(currentDate)
+            loadAndDisplayTasks()
+            updateDateLabel()
+            Toast.makeText(requireContext(), "Next day: $currentDate", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun populateSampleData() {
         val mobicomId = dbHelper.insertHeader("MOBICOM", "#FF5722")
-        dbHelper.insertTask(mobicomId, "Complete report", "9:00 AM", false)
-        dbHelper.insertTask(mobicomId, "Submit summary", "11:00 AM", true)
+        dbHelper.insertTask(mobicomId, "Complete report", "9:00 AM", false, "2025-07-16")
 
         val itsecId = dbHelper.insertHeader("ITSECWB", "#3F51B5")
-        dbHelper.insertTask(itsecId, "Review logs", "2:00 PM", false)
+        dbHelper.insertTask(itsecId, "Review logs", "2:00 PM", false, currentDate)
+
         Toast.makeText(requireContext(), "Sample data populated!", Toast.LENGTH_SHORT).show()
     }
 
-    private fun loadAndDisplayTasks() {
-        // Load from DB
-        val data = dbHelper.getAllItems().toMutableList() // Convert to mutable list
-
-        // Initialize the adapter if not already initialized, or update its data
-        if (!::adapter.isInitialized) {
-            adapter = TaskListAdapter(data) { headerId ->
-                showAddTaskDialog(headerId, dbHelper)
-            }
-            binding.taskRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-            binding.taskRecyclerView.adapter = adapter
-        } else {
-            adapter.updateData(data)
-        }
-    }
-
     private fun showAddTaskDialog(headerId: Long, dbHelper: TaskDatabaseHelper) {
-        // Inflate and show the overlay dialog
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.overlay_add_task, null)
         val dialog = android.app.AlertDialog.Builder(requireContext())
             .setView(dialogView)
@@ -99,44 +126,43 @@ class TaskListFragment : Fragment() {
         amButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 pmButton.isChecked = false
-                amButton.setBackgroundColor(resources.getColor(R.color.toggle_checked)) // Highlight selected
-                pmButton.setBackgroundColor(resources.getColor(R.color.toggle_unchecked)) // Reset other button
+                amButton.setBackgroundColor(resources.getColor(R.color.toggle_checked))
+                pmButton.setBackgroundColor(resources.getColor(R.color.toggle_unchecked))
             }
         }
 
         pmButton.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 amButton.isChecked = false
-                pmButton.setBackgroundColor(resources.getColor(R.color.toggle_checked)) // Highlight selected
-                amButton.setBackgroundColor(resources.getColor(R.color.toggle_unchecked)) // Reset other button
+                pmButton.setBackgroundColor(resources.getColor(R.color.toggle_checked))
+                amButton.setBackgroundColor(resources.getColor(R.color.toggle_unchecked))
             }
         }
 
-        // Confirm button functionality
         confirmButton.setOnClickListener {
             val name = taskNameInput.text.toString().trim()
             val hour = hourInput.text.toString().trim().padStart(2, '0')
             val minutes = minutesInput.text.toString().trim().padStart(2, '0')
             val ampm = if (amButton.isChecked) "AM" else "PM"
 
-            // Validate the minutes input (should be between 0 and 59)
             val minutesInt = minutes.toIntOrNull()
             if (minutesInt == null || minutesInt !in 0..59) {
                 Toast.makeText(requireContext(), "Please enter a valid minute between 00 and 59", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            val time = "$hour:$minutes $ampm" // Updated to include minutes
+            val time = "$hour:$minutes $ampm"
+
+            // Get current date (same date as in the dateLabel)
+            val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
             if (name.isNotEmpty() && hour.isNotEmpty() && minutes.isNotEmpty() && (amButton.isChecked || pmButton.isChecked)) {
-                // Save the task to the correct header group in the database
-                dbHelper.insertTask(headerId, name, time, false)
+                dbHelper.insertTask(headerId, name, time, false, currentDate)  // Use currentDate
 
                 Toast.makeText(requireContext(), "Task added: $name at $time", Toast.LENGTH_SHORT).show()
 
-                // Reload tasks in RecyclerView under the correct header
                 val updatedData = dbHelper.getAllItems()
-                adapter.updateData(updatedData)  // Update the data in the adapter
+                adapter.updateData(updatedData)
 
                 dialog.dismiss()
             } else {
@@ -144,7 +170,6 @@ class TaskListFragment : Fragment() {
             }
         }
 
-        // Cancel button functionality-
         cancelButton.setOnClickListener {
             dialog.dismiss()
         }
