@@ -1,89 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/dialogContainer"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/overlayAddHeader"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/overlay_background"
-    android:orientation="vertical"
-    android:padding="24dp">
+    android:layout_height="match_parent"
+    android:background="#80000000"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="visible">
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/newTaskTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New Task Header"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="#000000" />
-
-    <!-- Task Name Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Task Header Name"
-        android:textSize="16sp"
-        android:textColor="#000000" />
-
-    <!-- Task Name Input -->
-    <EditText
-        android:id="@+id/taskNameInput"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/overlay_background"
-        android:hint="Enter Task Header Name"
-        android:inputType="text"
-        android:padding="8dp"
-        android:textColor="#000000"
-        android:textColorHint="#888888" />
-
-    <!-- Color Selection Label -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="Select Color"
-        android:textSize="16sp"
-        android:textColor="#000000" />
-
-    <!-- Color Selection Spinner -->
-    <Spinner
-        android:id="@+id/colorSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="@color/overlay_background"
-        android:spinnerMode="dropdown" />
-
-    <!-- Confirm / Cancel Buttons -->
+    <!-- Modal Container -->
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        android:gravity="center">
+        android:layout_gravity="center"
+        android:background="@drawable/overlay_rounded_edge"
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="0dp"
+        <!-- Example Content -->
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/red_cancel"
-            android:text="Cancel"
-            android:textColor="#FFFFFF" />
+            android:layout_marginBottom="16dp"
+            android:text="Add Task Group"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/confirmButton"
-            android:layout_width="0dp"
+        <!-- Title -->
+        <TextView
+            android:id="@+id/newTaskTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/green_confirm"
-            android:text="Update"
-            android:textColor="#FFFFFF" />
+            android:text="New Task Header"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Task Name Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Task Header Name"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <!-- Task Name Input -->
+        <EditText
+            android:id="@+id/taskNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/overlay_background"
+            android:hint="Enter Task Header Name"
+            android:inputType="text"
+            android:padding="8dp"
+            android:textColor="#000000"
+            android:textColorHint="#888888" />
+
+        <!-- Color Selection Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Select Header Color"
+            android:textColor="#000000"
+            android:textSize="16sp" />
+
+        <!-- Color Selection Spinner -->
+        <Spinner
+            android:id="@+id/colorSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@color/overlay_background"
+            android:spinnerMode="dropdown" />
+
+        <!-- Confirm / Cancel Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <Button
+                android:id="@+id/cancelButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/red_cancel"
+                android:text="Cancel"
+                android:textColor="#FFFFFF" />
+
+            <Button
+                android:id="@+id/confirmButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/green_confirm"
+                android:text="Confirm"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</FrameLayout>
