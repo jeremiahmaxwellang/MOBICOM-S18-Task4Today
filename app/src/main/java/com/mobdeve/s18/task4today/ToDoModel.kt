@@ -7,6 +7,7 @@ class ToDoModel(
 ) {
 
 // Getters and Setters
+
     var id: Int = id
         private set
 
@@ -16,5 +17,7 @@ class ToDoModel(
     var task : String = task
         private set
 
+    // Constructor without ID
+    constructor(status: Int, task: String) : this(0, status, task)
 
 }
