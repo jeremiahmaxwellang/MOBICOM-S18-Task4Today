@@ -1,5 +1,6 @@
 package com.mobdeve.s18.task4today
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,6 +11,10 @@ class ToDoAdapter (
     private var todoList : ArrayList<ToDoModel>,
     private var dbHelper : DbHelper
 ) : RecyclerView.Adapter<MyViewHolder>() {
+
+    fun getContext(): Context{
+        return activity
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : MyViewHolder {

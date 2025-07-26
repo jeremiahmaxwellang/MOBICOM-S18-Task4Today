@@ -32,7 +32,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
 
     }
 
-    private lateinit var db : SQLiteDatabase
+    private lateinit var sqliteDatabase : SQLiteDatabase
 
     // Run SQL stmt to CREATE TABLES
     override fun onCreate(db: SQLiteDatabase){
@@ -50,13 +50,13 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
 
     // Inserts tasks into the db
     fun insertTasks(task : ToDoModel){
-        db = writableDatabase
+        sqliteDatabase = writableDatabase
         var cv = ContentValues().apply {
             put(DbReferences.TASK, task.task) //in Java: task.getTask()
             put(DbReferences.STATUS, task.status)
         }
 
-        db.insert(DbReferences.TASKS_TABLE, null, cv)
+        sqliteDatabase.insert(DbReferences.TASKS_TABLE, null, cv)
     }
 
     // Fetch all tasks from the db
@@ -96,11 +96,11 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     }
 
     fun updateStatus(id : Int, status : Int){
-        db = writableDatabase
+        sqliteDatabase = writableDatabase
 
         var cv = ContentValues()
         cv.put(DbReferences.STATUS, status)
-        db.update(
+        sqliteDatabase.update(
             DbReferences.TASKS_TABLE,
             cv,
             DbReferences.ID + "=?",
@@ -109,11 +109,11 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     }
 
     fun updateTask(id : Int, task : String){
-        db = writableDatabase
+        sqliteDatabase = writableDatabase
 
         var cv = ContentValues()
         cv.put(DbReferences.TASK, task)
-        db.update(
+        sqliteDatabase.update(
             DbReferences.TASKS_TABLE,
             cv,
             DbReferences.ID + "=?",
@@ -122,9 +122,9 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     }
 
     fun deleteTask(id : Int){
-        db = writableDatabase
+        sqliteDatabase = writableDatabase
 
-        db.delete(
+        sqliteDatabase.delete(
             DbReferences.TASKS_TABLE,
             DbReferences.ID + "=?",
             arrayOf(id.toString())
