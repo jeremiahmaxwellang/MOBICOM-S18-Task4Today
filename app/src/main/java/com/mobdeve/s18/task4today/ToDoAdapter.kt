@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 class ToDoAdapter (
-    private var activity: MainActivity,
+    val activity: MainActivity,
     private var todoList : ArrayList<ToDoModel>,
-    private var db : DbHelper
+    private var dbHelper : DbHelper
 ) : RecyclerView.Adapter<MyViewHolder>() {
 
 
@@ -34,7 +34,7 @@ class ToDoAdapter (
 
         holder.task.setOnCheckedChangeListener{ _, isChecked ->
             val status = if(isChecked) 1 else 0
-            db.updateStatus(item.id, status)
+            dbHelper.updateStatus(item.id, status)
         }
 
     }
@@ -63,6 +63,15 @@ class ToDoAdapter (
 
         val fragment = AddNewTask.newInstance(item.id, item.task)
         fragment.show(activity.supportFragmentManager, AddNewTask.TAG)
+    }
+
+    // Delete task
+    fun deleteItem(position: Int){
+        val item = todoList[position]
+        dbHelper.deleteTask(item.id)
+        todoList.removeAt(position)
+        notifyItemRemoved(position)
+
     }
 
 }

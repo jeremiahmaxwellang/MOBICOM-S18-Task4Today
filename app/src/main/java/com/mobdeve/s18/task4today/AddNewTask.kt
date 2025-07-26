@@ -35,7 +35,7 @@ class AddNewTask : BottomSheetDialogFragment() {
 
     private lateinit var newTaskText : EditText
     private lateinit var newTaskSaveButton : Button
-    private lateinit var db : DbHelper
+    private lateinit var dbHelper : DbHelper
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -57,7 +57,7 @@ class AddNewTask : BottomSheetDialogFragment() {
         newTaskText = view.findViewById(R.id.newTaskText)
         newTaskSaveButton = view.findViewById(R.id.newTaskButton)
 
-        db = DbHelper(requireContext())
+        dbHelper = DbHelper(requireContext())
 
         var isUpdate = false
         val bundle = arguments
@@ -92,12 +92,12 @@ class AddNewTask : BottomSheetDialogFragment() {
         newTaskSaveButton.setOnClickListener {
             val text = newTaskText.text.toString()
             if(isUpdate){
-                db.updateTask(bundle?.getInt("id") ?: -1, text)
+                dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
             }
             else {
                 // ToDoModel(status, task)
                 val task = ToDoModel(0, text)
-                db.insertTasks(task)
+                dbHelper.insertTasks(task)
             }
             dismiss()
         } // end of onClickListener

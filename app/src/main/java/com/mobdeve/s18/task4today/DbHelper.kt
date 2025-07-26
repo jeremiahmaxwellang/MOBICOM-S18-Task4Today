@@ -36,6 +36,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
 
     // Run SQL stmt to CREATE TABLES
     override fun onCreate(db: SQLiteDatabase){
+
         db.execSQL(DbReferences.CREATE_TASKS_TABLE)
     }
 
@@ -49,6 +50,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
 
     // Inserts tasks into the db
     fun insertTasks(task : ToDoModel){
+        db = writableDatabase
         var cv = ContentValues().apply {
             put(DbReferences.TASK, task.task) //in Java: task.getTask()
             put(DbReferences.STATUS, task.status)
@@ -94,6 +96,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     }
 
     fun updateStatus(id : Int, status : Int){
+        db = writableDatabase
+
         var cv = ContentValues()
         cv.put(DbReferences.STATUS, status)
         db.update(
@@ -105,6 +109,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     }
 
     fun updateTask(id : Int, task : String){
+        db = writableDatabase
+
         var cv = ContentValues()
         cv.put(DbReferences.TASK, task)
         db.update(
@@ -116,6 +122,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     }
 
     fun deleteTask(id : Int){
+        db = writableDatabase
+
         db.delete(
             DbReferences.TASKS_TABLE,
             DbReferences.ID + "=?",
