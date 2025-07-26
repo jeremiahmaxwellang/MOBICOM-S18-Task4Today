@@ -96,8 +96,9 @@ class AddNewTask : BottomSheetDialogFragment() {
             }
             else {
                 // ToDoModel(status, task)
-                val task = ToDoModel(0, text)
-                dbHelper.insertTasks(task)
+                // TODO: Fix insertTask function call with date and time
+//                val task = TaskModel(0, text)
+//                dbHelper.insertTasks(task)
             }
             dismiss()
         } // end of onClickListener

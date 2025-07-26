@@ -1,72 +1,69 @@
 package com.mobdeve.s18.task4today
 
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatDelegate
-import com.mobdeve.s18.task4today.databinding.ActivityMainBinding
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.mobdeve.s18.task4today.AddNewTask.DialogCloseListener
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DialogCloseListener {
+    private lateinit var tasksRecyclerView : RecyclerView
+    private lateinit var adapter: ToDoAdapter
+    private lateinit var addBtn : FloatingActionButton
 
-    private lateinit var binding: ActivityMainBinding
+    // Helper for swiping to edit/delete tasks
+    private lateinit var itemTouchHelper : ItemTouchHelper
+
+    // List of tasks
+    private lateinit var taskList : ArrayList<TaskModel>
+
+    private var dbHelper = DbHelper(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        // 🔄 Apply saved theme BEFORE anything else
-        applySavedTheme()
-
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
 
-        // Load default fragment (TaskListFragment with RecyclerView)
-        replaceFragment(TaskListFragment())
+        // Initialize to avoid error
+        taskList = ArrayList()
 
-        // Set up bottom navigation
-        binding.bottomNavigation.setOnItemSelectedListener { item ->
-            resetIcons() // Reset to default icons first
+        supportActionBar?.hide()
 
-            when (item.itemId) {
-                R.id.nav_tasks -> {
-                    binding.bottomNavigation.menu.findItem(R.id.nav_tasks)
-                        .setIcon(R.drawable.ic_tasks_clicked)
-                    replaceFragment(TaskListFragment())
-                }
-                R.id.nav_calendar -> {
-                    binding.bottomNavigation.menu.findItem(R.id.nav_calendar)
-                        .setIcon(R.drawable.ic_calendar_clicked)
-                    replaceFragment(CalendarFragment())
-                }
-                R.id.nav_blank -> {
-                    binding.bottomNavigation.menu.findItem(R.id.nav_blank)
-                        .setIcon(R.drawable.ic_blank_clicked)
-                    replaceFragment(SettingsFragment())
-                }
-            }
-            true
+        // 1. Initialize RecyclerView
+        this.tasksRecyclerView = findViewById(R.id.tasksRecyclerView)
+
+        // 2. Set Adapter
+        adapter = ToDoAdapter(this, taskList, dbHelper)
+        this.tasksRecyclerView.adapter = adapter
+
+        // 3. Set the layout manager
+        this.tasksRecyclerView.layoutManager = LinearLayoutManager(this)
+
+        // 4. Add Tasks Floating Action Button (+)
+        addBtn = findViewById(R.id.addBtn)
+        // TODO: Fix addBtn OnClickListener
+        addBtn.setOnClickListener{
+            AddNewTask.newInstance().show(supportFragmentManager, AddNewTask.TAG)
         }
+
+        // 5. Set up helper for swiping tasks
+        itemTouchHelper = ItemTouchHelper(RecyclerItemTouchHelper(adapter))
+        itemTouchHelper.attachToRecyclerView(tasksRecyclerView)
+
+        taskList = dbHelper.getAllTasks()
+        taskList = ArrayList<TaskModel>(taskList.asReversed())
+        adapter.setTasks(taskList)
+
     }
 
-    // 🔁 Theme handling
-    private fun applySavedTheme() {
-        val sharedPrefs = getSharedPreferences("ThemePreferences", MODE_PRIVATE)
-        val isDarkMode = sharedPrefs.getBoolean("DarkModeEnabled", false)
-        AppCompatDelegate.setDefaultNightMode(
-            if (isDarkMode) AppCompatDelegate.MODE_NIGHT_YES
-            else AppCompatDelegate.MODE_NIGHT_NO
-        )
-    }
+    // Close "Delete Task?" dialog box
+    override fun handleDialogClose(dialog: DialogInterface) {
+        taskList = dbHelper.getAllTasks()
+        taskList = ArrayList<TaskModel>(taskList.asReversed())
+        adapter.setTasks(taskList)
+        adapter.notifyDataSetChanged()
 
-    // 🔄 Switch to the selected fragment
-    /*private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .commit()
-    }*/
-
-    // 🎨 Reset all icons to default state
-    private fun resetIcons() {
-        binding.bottomNavigation.menu.findItem(R.id.nav_tasks).setIcon(R.drawable.ic_tasks)
-        binding.bottomNavigation.menu.findItem(R.id.nav_calendar).setIcon(R.drawable.ic_calendar)
-        binding.bottomNavigation.menu.findItem(R.id.nav_blank).setIcon(R.drawable.ic_blank)
     }
 }
