@@ -52,28 +52,30 @@ class MainActivity : AppCompatActivity(), DialogCloseListener {
     }
 
     // temp function for setting data
-    fun setData(taskList : ArrayList<ToDoModel>) {
-        // Dummy data
-        var task = ToDoModel(1, 0, "This is a test task")
-        taskList.add(task)
+//    fun setData(taskList : ArrayList<ToDoModel>) {
+//        // Dummy data
+//        var task = ToDoModel(1, 0, "This is a test task")
+//        taskList.add(task)
+//
+//        task = ToDoModel(2, 0, "work on Essay 1")
+//        taskList.add(task)
+//
+//        task = ToDoModel(3, 0, "watch sqlite tutorial")
+//        taskList.add(task)
+//
+//        task = ToDoModel(4, 0, "change diaper")
+//        taskList.add(task)
+//
+//        task = ToDoModel(5, 1, "make a steak")
+//        taskList.add(task)
+//    }
 
-        task = ToDoModel(2, 0, "work on Essay 1")
-        taskList.add(task)
-
-        task = ToDoModel(3, 0, "watch sqllite tutorial")
-        taskList.add(task)
-
-        task = ToDoModel(4, 0, "change diaper")
-        taskList.add(task)
-
-        task = ToDoModel(5, 1, "make a steak")
-        taskList.add(task)
-    }
-
+    // Close "Delete Task?" dialog box
     override fun handleDialogClose(dialog: DialogInterface) {
         taskList = db.getAllTasks()
         taskList = ArrayList<ToDoModel>(taskList.asReversed())
         adapter.setTasks(taskList)
+        adapter.notifyDataSetChanged()
 
     }
 }

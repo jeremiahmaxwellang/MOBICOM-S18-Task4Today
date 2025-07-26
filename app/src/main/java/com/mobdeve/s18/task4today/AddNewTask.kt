@@ -18,6 +18,10 @@ class AddNewTask : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "ActionBottomDialog"
 
+        fun newInstance(): AddNewTask {
+            return AddNewTask()
+        }
+
         fun newInstance(id: Int, task: String): AddNewTask {
             val fragment = AddNewTask()
             fragment.arguments = Bundle().apply {
@@ -99,6 +103,7 @@ class AddNewTask : BottomSheetDialogFragment() {
         } // end of onClickListener
     } // end of onViewCreated()
 
+    // Close "Delete Task?" dialog box
     override fun onDismiss(dialog: DialogInterface) {
         val activity = getActivity()
         if(activity is DialogCloseListener){
