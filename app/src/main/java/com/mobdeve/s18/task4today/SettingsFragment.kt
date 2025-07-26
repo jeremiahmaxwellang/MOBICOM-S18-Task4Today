@@ -45,10 +45,10 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Button to navigate to another activity
-        binding.editGroupButton.setOnClickListener {
+        /*binding.editGroupButton.setOnClickListener {
             val intent = Intent(requireContext(), HeaderGroupsList::class.java)
             startActivity(intent)
-        }
+        }*/
 
         // Set initial button text based on current theme
         updateThemeButtonText()

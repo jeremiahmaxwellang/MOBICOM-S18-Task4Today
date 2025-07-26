@@ -53,7 +53,7 @@ class TaskListFragment : Fragment() {
         return sdf.format(calendar.time)
     }
 
-    private fun loadAndDisplayTasks() {
+    /*private fun loadAndDisplayTasks() {
         // Ensure headers are loaded once
         if (adapter.itemCount == 0) {
             val headers = dbHelper.getAllItems().filterIsInstance<ListItem.Header>()
@@ -175,7 +175,7 @@ class TaskListFragment : Fragment() {
         }
 
         dialog.show()
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

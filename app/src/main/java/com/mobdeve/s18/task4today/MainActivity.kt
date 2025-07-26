@@ -57,11 +57,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     // 🔄 Switch to the selected fragment
-    /*private fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
-    }*/
+    }
 
     // 🎨 Reset all icons to default state
     private fun resetIcons() {
