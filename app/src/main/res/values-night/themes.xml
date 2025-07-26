@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <style name="Theme.Task4Today" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
+<style name="Theme.YourApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Other existing theme items -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
@@ -10,9 +9,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <item name="android:statusBarColor" tools:targetApi="l">@color/purple_700</item>
 
-        <!-- Light Mode Overlay Background Color -->
-        <item name="overlayBackgroundColor">#FAF9F6</item> <!-- Off White Color -->
+        <!-- Dark Overlay for Dark Mode -->
+        <item name="overlayBackgroundColor">#343231</item> <!-- Off Black Color -->
     </style>
-
-
 </resources>
