@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class ToDoAdapter (
     val activity: MainActivity,
-    private var todoList : ArrayList<ToDoModel>,
+    private var todoList : ArrayList<TaskModel>,
     private var dbHelper : DbHelper
 ) : RecyclerView.Adapter<MyViewHolder>() {
 
@@ -54,7 +54,7 @@ class ToDoAdapter (
     }
 
     // Set tasks on the screen
-    fun setTasks(todoList: ArrayList<ToDoModel>){
+    fun setTasks(todoList: ArrayList<TaskModel>){
         this.todoList = todoList
         notifyDataSetChanged()
     }
