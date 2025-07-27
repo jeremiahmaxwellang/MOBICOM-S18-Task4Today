@@ -29,7 +29,7 @@ class CalendarFragment : Fragment() {
             Toast.makeText(requireContext(), "Selected: $date", Toast.LENGTH_SHORT).show()
         }
     }
-//
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
