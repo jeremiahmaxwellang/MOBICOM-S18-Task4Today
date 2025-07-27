@@ -14,7 +14,7 @@
 
     <string-array name="header_colors">
         <item>#FF6961</item> <!-- Pastel Red -->
-        <item>##FFC067</item> <!-- Pastel Orange -->
+        <item>#FFC067</item> <!-- Pastel Orange -->
         <item>#77DD77</item> <!-- Pastel Green -->
         <item>#85A1F2</item> <!-- Pastel Blue -->
         <item>#8686AF</item> <!-- Pastel Indigo -->
