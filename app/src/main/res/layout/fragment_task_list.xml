@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <!-- Date and Arrow Navigation -->
     <LinearLayout
+        android:id="@+id/dateNavLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -29,7 +29,8 @@
             android:src="@drawable/ic_arrow_left"
             android:background="@null"
             android:scaleType="centerInside"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            app:tint="?attr/colorControlNormal"/>
 
         <ImageButton
             android:id="@+id/nextDayBtn"
@@ -38,14 +39,27 @@
             android:src="@drawable/ic_arrow_right"
             android:background="@null"
             android:scaleType="centerInside"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            app:tint="?attr/colorControlNormal"/>
     </LinearLayout>
 
     <!-- Task List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/taskRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_below="@id/dateNavLayout"
         android:layout_marginTop="16dp" />
-</LinearLayout>
+
+    <!-- FAB visible only in this fragment -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="24dp"
+        app:backgroundTint="@color/green_confirm"
+        app:tint="@android:color/white"
+        android:contentDescription="Add Task" />
+</RelativeLayout>
