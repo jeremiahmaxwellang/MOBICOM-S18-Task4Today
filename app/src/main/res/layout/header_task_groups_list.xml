@@ -42,13 +42,12 @@
             app:tint="?attr/colorControlNormal"/>
     </LinearLayout>
 
-    <!-- Task List -->
+    <!-- Task Header List -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/taskRecyclerView"
+        android:id="@+id/completeTaskHeaderList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="16dp" />
+        android:layout_weight="1" />
 
     <!-- Adding the Overlay to the Screen -->
     <include

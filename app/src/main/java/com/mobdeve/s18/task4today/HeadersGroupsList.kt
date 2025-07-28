@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 import com.mobdeve.s18.task4today.TaskHeader_ColorOption.TaskHeaderColorOption
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class HeaderGroupsList : AppCompatActivity() {
 
@@ -15,10 +18,21 @@ class HeaderGroupsList : AppCompatActivity() {
     private lateinit var colorSpinner: Spinner
     private lateinit var confirmButton: Button
     private lateinit var cancelButton: Button
+    private lateinit var completeTaskHeaderList: RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.header_task_groups_list)
+
+        //Initialize views
+        completeTaskHeaderList = findViewById(R.id.completeTaskHeaderList)
+        completeTaskHeaderList.layoutManager = LinearLayoutManager(this)
+
+        val dbHelper = DbHelper(this)
+        val headerList = dbHelper.getAllHeaders()
+        val adapter = HeaderListAdapter(headerList)
+        completeTaskHeaderList.adapter = adapter
 
         // Find UI components
         addBtn = findViewById(R.id.addBtn)
@@ -59,11 +73,17 @@ class HeaderGroupsList : AppCompatActivity() {
                     id = 0,
                     title = headerTitle,
                     color = selectedColorOption.hex,
-                    taskList = arrayListOf<TaskModel>()
+                    taskList = arrayListOf()
                 )
                 dbHelper.insertHeaders(header)
-
                 Toast.makeText(this, "Task header added", Toast.LENGTH_SHORT).show()
+
+                // Refresh the list
+                val updatedHeaders = dbHelper.getAllHeaders()
+                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders)
+
+                val updatedTitles = updatedHeaders.map { it.title }
+
                 overlayAddHeader.visibility = View.GONE
                 taskNameInput.text.clear()
             } else {

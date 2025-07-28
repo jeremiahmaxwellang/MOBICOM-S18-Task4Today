@@ -80,14 +80,12 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     // Inserts headers into the db
     // TODO: Call insertHeaders where needed
     // TODO: Make update & delete functions for headers
-    fun insertHeaders(header : HeaderModel){
+    fun insertHeaders(header: HeaderModel) {
         sqliteDatabase = writableDatabase
-        var cv = ContentValues().apply {
-            put(DbReferences.HEADER_ID, header.id)
+        val cv = ContentValues().apply { // SQLite auto-generates the ID
             put(DbReferences.HEADER_TITLE, header.title)
             put(DbReferences.HEADER_COLOR, header.color)
         }
-
         sqliteDatabase.insert(DbReferences.HEADERS_TABLE, null, cv)
     }
 
