@@ -7,6 +7,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.HeaderModel
 import com.mobdeve.s18.task4today.R
+import android.graphics.Color
+import androidx.core.graphics.drawable.DrawableCompat
 
 // HeaderListAdapter.kt
 class HeaderListAdapter(private val headers: List<HeaderModel>) :
@@ -26,11 +28,17 @@ class HeaderListAdapter(private val headers: List<HeaderModel>) :
         val header = headers[position]
         holder.titleText.text = header.title
 
-        // Set the background color of the whole item view using the stored hex
-        try {
-            holder.itemView.setBackgroundColor(android.graphics.Color.parseColor(header.color))
-        } catch (e: IllegalArgumentException) {
-            holder.itemView.setBackgroundColor(android.graphics.Color.GRAY)
+        // Tint the background drawable with the header's color
+        val background = holder.itemView.background?.mutate()
+        if (background != null) {
+            try {
+                val wrapped = DrawableCompat.wrap(background)
+                DrawableCompat.setTint(wrapped, Color.parseColor(header.color))
+                holder.itemView.background = wrapped
+            } catch (e: IllegalArgumentException) {
+                // Fallback tint
+                DrawableCompat.setTint(background, Color.GRAY)
+            }
         }
     }
 
