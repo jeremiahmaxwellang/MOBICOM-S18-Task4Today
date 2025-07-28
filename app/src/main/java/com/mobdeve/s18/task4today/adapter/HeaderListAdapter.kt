@@ -25,6 +25,13 @@ class HeaderListAdapter(private val headers: List<HeaderModel>) :
     override fun onBindViewHolder(holder: HeaderViewHolder, position: Int) {
         val header = headers[position]
         holder.titleText.text = header.title
+
+        // Set the background color of the whole item view using the stored hex
+        try {
+            holder.itemView.setBackgroundColor(android.graphics.Color.parseColor(header.color))
+        } catch (e: IllegalArgumentException) {
+            holder.itemView.setBackgroundColor(android.graphics.Color.GRAY)
+        }
     }
 
     override fun getItemCount(): Int = headers.size
