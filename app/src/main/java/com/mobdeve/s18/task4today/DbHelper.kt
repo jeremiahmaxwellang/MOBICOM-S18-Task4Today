@@ -201,11 +201,40 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
         )
     }
 
+    // Update task text
     fun updateTask(id : Int, task : String){
         sqliteDatabase = writableDatabase
 
         var cv = ContentValues()
         cv.put(DbReferences.TASK, task)
+        sqliteDatabase.update(
+            DbReferences.TASKS_TABLE,
+            cv,
+            DbReferences.TASK_ID + "=?",
+            arrayOf(id.toString())
+        )
+    }
+
+    // Update task date
+    fun updateDate(id : Int, time : String){
+        sqliteDatabase = writableDatabase
+
+        var cv = ContentValues()
+        cv.put(DbReferences.TIME, time)
+        sqliteDatabase.update(
+            DbReferences.TASKS_TABLE,
+            cv,
+            DbReferences.TASK_ID + "=?",
+            arrayOf(id.toString())
+        )
+    }
+
+//    Update task time to be accomplished
+    fun updateTime(id : Int, time : String){
+        sqliteDatabase = writableDatabase
+
+        var cv = ContentValues()
+        cv.put(DbReferences.TIME, time)
         sqliteDatabase.update(
             DbReferences.TASKS_TABLE,
             cv,
