@@ -31,8 +31,8 @@ class HeaderGroupsList : AppCompatActivity() {
 
         val dbHelper = DbHelper(this)
         val headerList = dbHelper.getAllHeaders()
-        val adapter = HeaderListAdapter(headerList)
-        completeTaskHeaderList.adapter = adapter
+        val adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list)
+        completeTaskHeaderList.adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list)
 
         // Find UI components
         addBtn = findViewById(R.id.addBtn)
@@ -80,7 +80,7 @@ class HeaderGroupsList : AppCompatActivity() {
 
                 // Refresh the list
                 val updatedHeaders = dbHelper.getAllHeaders()
-                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders)
+                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list)
 
                 val updatedTitles = updatedHeaders.map { it.title }
 
