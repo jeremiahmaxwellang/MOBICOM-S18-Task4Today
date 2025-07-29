@@ -249,8 +249,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
         sqliteDatabase = writableDatabase
 
         sqliteDatabase.delete(
-            DbReferences.TASKS_TABLE,
-            DbReferences.TASK_ID + "=?",
+            DbReferences.HEADERS_TABLE,
+            DbReferences.HEADER_ID + "=?",
             arrayOf(id.toString())
         )
     }
