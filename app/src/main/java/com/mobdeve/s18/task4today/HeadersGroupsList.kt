@@ -8,6 +8,7 @@ import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 import com.mobdeve.s18.task4today.TaskHeader_ColorOption.TaskHeaderColorOption
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
 
 class HeaderGroupsList : AppCompatActivity() {
 
@@ -31,8 +32,12 @@ class HeaderGroupsList : AppCompatActivity() {
 
         val dbHelper = DbHelper(this)
         val headerList = dbHelper.getAllHeaders()
-        val adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list)
-        completeTaskHeaderList.adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list)
+        val adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, object : OnHeaderActionListener{
+            override fun onAddTaskClicked(header: HeaderModel){}
+        })
+        completeTaskHeaderList.adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, object : OnHeaderActionListener{
+            override fun onAddTaskClicked(header: HeaderModel){}
+        })
 
         // Find UI components
         addBtn = findViewById(R.id.addBtn)
@@ -80,7 +85,9 @@ class HeaderGroupsList : AppCompatActivity() {
 
                 // Refresh the list
                 val updatedHeaders = dbHelper.getAllHeaders()
-                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list)
+                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, object : OnHeaderActionListener{
+                    override fun onAddTaskClicked(header: HeaderModel){}
+                })
 
                 val updatedTitles = updatedHeaders.map { it.title }
 

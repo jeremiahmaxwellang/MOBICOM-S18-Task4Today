@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.adapter.ToDoAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
+import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
 import com.mobdeve.s18.task4today.databinding.FragmentTaskListBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -44,8 +45,18 @@ class TaskListFragment : Fragment() {
         val headerList = dbHelper.getAllHeaders()
 
         // 3. Set up adapter using format_task_list_header.xml
-        adapter = HeaderListAdapter(headerList, R.layout.format_task_list_header)
+        adapter = HeaderListAdapter(headerList, R.layout.format_task_list_header,
+            object : OnHeaderActionListener {
+                // Open ADD TASK Overlay
+                override fun onAddTaskClicked(header: HeaderModel){
+                    val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
+                    newTaskOverlay.visibility = View.VISIBLE
+
+                }
+            })
         taskRecyclerView.adapter = adapter
+
+
     }
 
     private fun getPreviousDate(date: String): String {
@@ -76,4 +87,6 @@ class TaskListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+
 }

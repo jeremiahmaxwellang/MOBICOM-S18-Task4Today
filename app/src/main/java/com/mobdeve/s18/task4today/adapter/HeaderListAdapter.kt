@@ -13,19 +13,18 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.graphics.drawable.DrawableCompat
 import com.mobdeve.s18.task4today.AddNewTask
 import com.mobdeve.s18.task4today.DbHelper
 import com.mobdeve.s18.task4today.MainActivity
 import com.mobdeve.s18.task4today.MyViewHolder
-import com.mobdeve.s18.task4today.TaskHeader_ColorOption.TaskHeaderColorOption
 import com.mobdeve.s18.task4today.TaskModel
 
 // HeaderListAdapter.kt
 class HeaderListAdapter(
     private val headers: List<HeaderModel>,
-    private val layoutResId: Int // Parameter to allow dynamic layout
+    private val layoutResId: Int, // Parameter to allow dynamic layout
+    private val listener: OnHeaderActionListener //REQUIRED ADD BTN Action listener
 ) :
 
 RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
@@ -35,13 +34,18 @@ RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
         val addButton: ImageView? = itemView.findViewById(R.id.headerAddButton) // Safe optional
 
         // Task Overlays
-        // TODO: Fix problem - overlayAddTask is null (already included the overlay in fragment_task_list.xml)
-        val overlayAddTask: View = itemView.findViewById(R.id.overlayAddTask) // Add Task Overlay
-        val taskNameInput: EditText? = overlayAddTask.findViewById(R.id.taskInput)
-        val timeButton: Button? = overlayAddTask.findViewById(R.id.colorSpinner)
-        val confirmButton: Button? = overlayAddTask.findViewById(R.id.confirmButton)
-        val cancelButton: Button? = overlayAddTask.findViewById(R.id.cancelButton)
+//        val overlayNewTask: View = itemView.findViewById(R.id.overlayNewTask) // Add Task Overlay
+//        val taskNameInput: EditText? = overlayNewTask.findViewById(R.id.taskInput)
+//        val timeButton: Button? = overlayNewTask.findViewById(R.id.colorSpinner)
+//        val confirmButton: Button? = overlayNewTask.findViewById(R.id.confirmButton)
+//        val cancelButton: Button? = overlayNewTask.findViewById(R.id.cancelButton)
 
+        fun bind(header: HeaderModel){
+            titleText.text = header.title
+            addButton?.setOnClickListener {
+                listener.onAddTaskClicked(header)
+            }
+        }
 
     }
 
@@ -54,7 +58,8 @@ RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
 
     override fun onBindViewHolder(holder: HeaderViewHolder, position: Int) {
         val header = headers[position]
-        holder.titleText.text = header.title
+//        holder.titleText.text = header.title
+        holder.bind(header)
 
         // Tint the background drawable with the header's color
         val background = holder.itemView.background?.mutate()
@@ -68,15 +73,15 @@ RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
                 DrawableCompat.setTint(background, Color.GRAY)
             }
 
-            // Show overlay when Add button is clicked
-            holder.addButton?.setOnClickListener {
-                holder.overlayAddTask.visibility = View.VISIBLE
-            }
-
-            // Cancel overlay
-            holder.cancelButton?.setOnClickListener {
-                holder.overlayAddTask.visibility = View.GONE
-            }
+//            // Show overlay when Add button is clicked
+//            holder.addButton?.setOnClickListener {
+//                holder.overlayNewTask.visibility = View.VISIBLE
+//            }
+//
+//            // Cancel overlay
+//            holder.cancelButton?.setOnClickListener {
+//                holder.overlayNewTask.visibility = View.GONE
+//            }
 
             // TODO: Confirm new task
 //            holder.confirmButton.setOnClickListener {
@@ -186,4 +191,9 @@ class ToDoAdapter (
 
     }
 
+}
+
+interface OnHeaderActionListener{
+    // interface requires calling onAddTaskClicked
+    fun onAddTaskClicked(header: HeaderModel)
 }
