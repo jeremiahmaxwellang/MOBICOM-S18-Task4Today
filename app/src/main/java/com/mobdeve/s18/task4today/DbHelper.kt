@@ -217,5 +217,43 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
         )
     }
 
+    // Update Header TITLE
+    fun updateHeaderTitle(id : Int, title : String){
+        sqliteDatabase = writableDatabase
+
+        var cv = ContentValues()
+        cv.put(DbReferences.HEADER_TITLE, title)
+        sqliteDatabase.update(
+            DbReferences.HEADERS_TABLE,
+            cv,
+            DbReferences.HEADER_ID + "=?",
+            arrayOf(id.toString())
+        )
+    }
+
+    // Update Header COLOR
+    fun updateHeaderColor(id : Int, color : String){
+        sqliteDatabase = writableDatabase
+
+        var cv = ContentValues()
+        cv.put(DbReferences.HEADER_COLOR, color)
+        sqliteDatabase.update(
+            DbReferences.HEADERS_TABLE,
+            cv,
+            DbReferences.HEADER_ID + "=?",
+            arrayOf(id.toString())
+        )
+    }
+
+    fun deleteHeader(id : Int){
+        sqliteDatabase = writableDatabase
+
+        sqliteDatabase.delete(
+            DbReferences.TASKS_TABLE,
+            DbReferences.TASK_ID + "=?",
+            arrayOf(id.toString())
+        )
+    }
+
 
 }
