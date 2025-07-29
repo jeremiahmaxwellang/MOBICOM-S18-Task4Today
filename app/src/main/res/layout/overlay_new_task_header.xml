@@ -48,7 +48,7 @@
 
         <!-- Task Name Input -->
         <EditText
-            android:id="@+id/taskNameInput"
+            android:id="@+id/taskInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/overlay_background"

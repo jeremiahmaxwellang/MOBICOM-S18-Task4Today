@@ -38,7 +38,7 @@ class HeaderGroupsList : AppCompatActivity() {
         addBtn = findViewById(R.id.addBtn)
         backBtn = findViewById(R.id.backBtn)
         overlayAddHeader = findViewById(R.id.overlayAddHeader)
-        taskNameInput = overlayAddHeader.findViewById(R.id.taskNameInput)
+        taskNameInput = overlayAddHeader.findViewById(R.id.taskInput)
         colorSpinner = overlayAddHeader.findViewById(R.id.colorSpinner)
         confirmButton = overlayAddHeader.findViewById(R.id.confirmButton)
         cancelButton = overlayAddHeader.findViewById(R.id.cancelButton)

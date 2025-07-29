@@ -47,7 +47,7 @@ class AddNewTask : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) : View{
-        val view: View = inflater.inflate(R.layout.overlay_new_task, container, false)
+        val view: View = inflater.inflate(R.layout.old_overlay_new_task, container, false)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         return view
     }

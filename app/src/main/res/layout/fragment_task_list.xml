@@ -30,7 +30,9 @@
             android:background="@null"
             android:scaleType="centerInside"
             android:padding="8dp"
-            app:tint="?attr/colorControlNormal"/>
+            app:tint="?attr/colorControlNormal"
+            android:contentDescription="previous day"
+            />
 
         <ImageButton
             android:id="@+id/nextDayBtn"
@@ -40,7 +42,9 @@
             android:background="@null"
             android:scaleType="centerInside"
             android:padding="8dp"
-            app:tint="?attr/colorControlNormal"/>
+            app:tint="?attr/colorControlNormal"
+            android:contentDescription="next day"
+            />
     </LinearLayout>
 
     <!-- Task List -->
@@ -51,7 +55,7 @@
         android:layout_below="@id/dateNavLayout"
         android:layout_marginTop="16dp" />
 
-    <!-- FAB visible only in this fragment -->
+    <!-- TODO: May need to delete - FAB visible only in this fragment -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addBtn"
         android:layout_width="wrap_content"
@@ -62,4 +66,10 @@
         app:backgroundTint="@color/green_confirm"
         app:tint="@android:color/white"
         android:contentDescription="Add Task" />
+
+    <!-- "Add Task" Overlay -->
+    <include
+        android:id="@+id/overlayAddTask"
+        layout="@layout/overlay_new_task"
+        android:visibility="gone" />
 </RelativeLayout>

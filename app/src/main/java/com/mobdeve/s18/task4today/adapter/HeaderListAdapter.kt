@@ -10,12 +10,16 @@ import com.mobdeve.s18.task4today.HeaderModel
 import com.mobdeve.s18.task4today.R
 import android.graphics.Color
 import android.os.Bundle
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.graphics.drawable.DrawableCompat
 import com.mobdeve.s18.task4today.AddNewTask
 import com.mobdeve.s18.task4today.DbHelper
 import com.mobdeve.s18.task4today.MainActivity
 import com.mobdeve.s18.task4today.MyViewHolder
+import com.mobdeve.s18.task4today.TaskHeader_ColorOption.TaskHeaderColorOption
 import com.mobdeve.s18.task4today.TaskModel
 
 // HeaderListAdapter.kt
@@ -29,6 +33,16 @@ RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
     inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleText: TextView = itemView.findViewById(R.id.headerTitle)
         val addButton: ImageView? = itemView.findViewById(R.id.headerAddButton) // Safe optional
+
+        // Task Overlays
+        // TODO: Fix problem - overlayAddTask is null (already included the overlay in fragment_task_list.xml)
+        val overlayAddTask: View = itemView.findViewById(R.id.overlayAddTask) // Add Task Overlay
+        val taskNameInput: EditText? = overlayAddTask.findViewById(R.id.taskInput)
+        val timeButton: Button? = overlayAddTask.findViewById(R.id.colorSpinner)
+        val confirmButton: Button? = overlayAddTask.findViewById(R.id.confirmButton)
+        val cancelButton: Button? = overlayAddTask.findViewById(R.id.cancelButton)
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
@@ -54,10 +68,45 @@ RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
                 DrawableCompat.setTint(background, Color.GRAY)
             }
 
-            // Optional: add button logic (only if present)
+            // Show overlay when Add button is clicked
             holder.addButton?.setOnClickListener {
-                // Add task to this header
+                holder.overlayAddTask.visibility = View.VISIBLE
             }
+
+            // Cancel overlay
+            holder.cancelButton?.setOnClickListener {
+                holder.overlayAddTask.visibility = View.GONE
+            }
+
+            // TODO: Confirm new task
+//            holder.confirmButton.setOnClickListener {
+//                val headerTitle = taskNameInput.text.toString().trim()
+//                val selectedColorOption = colorSpinner.selectedItem as TaskHeaderColorOption
+//
+//                if (headerTitle.isNotEmpty()) {
+//                    val dbHelper = DbHelper(this)
+//                    val header = HeaderModel(
+//                        id = 0,
+//                        title = headerTitle,
+//                        color = selectedColorOption.hex,
+//                        taskList = arrayListOf()
+//                    )
+//                    dbHelper.insertHeaders(header)
+//                    Toast.makeText(this, "Task header added", Toast.LENGTH_SHORT).show()
+//
+//                    // Refresh the list
+//                    val updatedHeaders = dbHelper.getAllHeaders()
+//                    completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list)
+//
+//                    val updatedTitles = updatedHeaders.map { it.title }
+//
+//                    overlayAddHeader.visibility = View.GONE
+//                    taskNameInput.text.clear()
+//                } else {
+//                    Toast.makeText(this, "Please enter a header name", Toast.LENGTH_SHORT).show()
+//                }
+//            }
+
         }
     }
 
