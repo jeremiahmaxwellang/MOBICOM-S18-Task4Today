@@ -16,7 +16,6 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
         const val DATABASE_VERSION = 2
         const val DATABASE_NAME = "task4today_db"
 
-//        TODO: DB Design should have Task Lists (example: ITSECWB, ITDBADM)
         // Task Header Table (example: ITSECWB, ITDBADM)
         const val HEADERS_TABLE = "headers"
         const val HEADER_ID = "id"
@@ -58,6 +57,12 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
 
         val DROP_TASKS_TABLE = "DROP TABLE " + TASKS_TABLE
 
+        // Insert Sample Task Header
+        val INSERT_MY_HEADER = """
+            INSERT INTO $HEADERS_TABLE ($HEADER_TITLE, $HEADER_COLOR)
+            VALUES("My Task Group", "FF6961")
+        """.trimIndent()
+
     }
 
     private lateinit var sqliteDatabase : SQLiteDatabase
@@ -66,6 +71,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     override fun onCreate(db: SQLiteDatabase){
         db.execSQL(DbReferences.CREATE_HEADERS_TABLE)
         db.execSQL(DbReferences.CREATE_TASKS_TABLE)
+        db.execSQL(DbReferences.INSERT_MY_HEADER) // insert sample header on first run of app
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int){
@@ -79,11 +85,10 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
 
     // Inserts headers into the db
     // TODO: Call insertHeaders where needed
-    // TODO: Make update & delete functions for headers
     fun insertHeaders(header: HeaderModel) {
         sqliteDatabase = writableDatabase
         val cv = ContentValues().apply { // SQLite auto-generates the ID
-            put(DbReferences.HEADER_TITLE, header.title)
+            put(DbReferences.HEADER_TITLE, header.title) //Set header title
             put(DbReferences.HEADER_COLOR, header.color)
         }
         sqliteDatabase.insert(DbReferences.HEADERS_TABLE, null, cv)
@@ -96,6 +101,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
             put(DbReferences.TASK_HEADER_ID, task.header_id)
             put(DbReferences.TASK, task.task) //in Java: task.getTask()
             put(DbReferences.STATUS, task.status)
+            put(DbReferences.DATE, task.date)
+            put(DbReferences.TIME, task.time)
         }
 
         sqliteDatabase.insert(DbReferences.TASKS_TABLE, null, cv)
@@ -245,6 +252,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
         )
     }
 
+    // Delete Task Header
     fun deleteHeader(id : Int){
         sqliteDatabase = writableDatabase
 
