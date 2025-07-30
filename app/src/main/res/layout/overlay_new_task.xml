@@ -11,6 +11,7 @@
 
     <!-- Modal Container -->
     <LinearLayout
+        android:id="@+id/modalContainer"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -59,8 +60,6 @@
             android:textColorHint="#888888" />
 
         <!-- Color Selection Label -->
-
-        <!-- Color Selection Spinner -->
         <Button
             android:id="@+id/timeButton"
             android:layout_width="166dp"
