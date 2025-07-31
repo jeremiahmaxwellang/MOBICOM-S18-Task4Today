@@ -55,18 +55,6 @@
         android:layout_below="@id/dateNavLayout"
         android:layout_marginTop="16dp" />
 
-    <!-- TODO: May need to delete - FAB visible only in this fragment -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="24dp"
-        app:backgroundTint="@color/green_confirm"
-        app:tint="@android:color/white"
-        android:contentDescription="Add Task" />
-
     <!-- "Add Task" Overlay -->
     <include
         android:id="@+id/overlayNewTask"

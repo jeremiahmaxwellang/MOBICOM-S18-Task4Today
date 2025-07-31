@@ -54,6 +54,8 @@ class AddNewTask : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
+//        newTaskText = view.findViewById(R.id.newTaskText)
+//        newTaskSaveButton = view.findViewById(R.id.newTaskButton)
 
         dbHelper = DbHelper(requireContext())
 

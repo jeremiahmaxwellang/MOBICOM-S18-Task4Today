@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+>
 
     <!-- Header Title (e.g., MOBICOM) -->
+
     <LinearLayout
-        android:id="@+id/headerContainer"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/header_background"
-        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="12dp">
+        android:paddingHorizontal="12dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/header_background"
+        android:layout_marginTop="12dp">
 
         <TextView
             android:id="@+id/headerTitle"
@@ -22,9 +24,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="MOBICOM"
-            android:textColor="@android:color/white"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@android:color/white" />
 
         <!-- Plus (+) Button -->
         <ImageView
@@ -33,16 +35,15 @@
             android:layout_height="24dp"
             android:contentDescription="Add Task"
             android:src="@drawable/ic_add"
-            android:tint="@color/white" />
+            app:tint="@color/white" />
+
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tasks"
+        android:id="@+id/taskListRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="20dp"
-        android:paddingTop="7dp"
-        android:paddingRight="20dp" />
+        android:nestedScrollingEnabled="false"/>
 
 </LinearLayout>

@@ -59,7 +59,8 @@
             android:textColor="#000000"
             android:textColorHint="#888888" />
 
-        <!-- Color Selection Label -->
+
+        <!-- Time Select Button -->
         <Button
             android:id="@+id/timeButton"
             android:layout_width="166dp"

@@ -33,13 +33,6 @@ RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
         val titleText: TextView = itemView.findViewById(R.id.headerTitle)
         val addButton: ImageView? = itemView.findViewById(R.id.headerAddButton) // Safe optional
 
-        // Task Overlays
-//        val overlayNewTask: View = itemView.findViewById(R.id.overlayNewTask) // Add Task Overlay
-//        val taskNameInput: EditText? = overlayNewTask.findViewById(R.id.taskInput)
-//        val timeButton: Button? = overlayNewTask.findViewById(R.id.colorSpinner)
-//        val confirmButton: Button? = overlayNewTask.findViewById(R.id.confirmButton)
-//        val cancelButton: Button? = overlayNewTask.findViewById(R.id.cancelButton)
-
         fun bind(header: HeaderModel){
             titleText.text = header.title
             addButton?.setOnClickListener {
