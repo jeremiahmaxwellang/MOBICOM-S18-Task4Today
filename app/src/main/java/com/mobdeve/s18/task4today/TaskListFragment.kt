@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mobdeve.s18.task4today.adapter.ToDoAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
