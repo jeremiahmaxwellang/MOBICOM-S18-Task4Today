@@ -22,7 +22,7 @@ class ToDoAdapter (
         val inflater = LayoutInflater.from(parent.context)
 
         // 2. Inflate a new view
-        val view = inflater.inflate(R.layout.task_layout, parent, false)
+        val view = inflater.inflate(R.layout.format_task_layout, parent, false)
         return MyViewHolder(view)
     }
 
@@ -41,7 +41,6 @@ class ToDoAdapter (
             val status = if(isChecked) 1 else 0
             dbHelper.updateStatus(item.id, status)
         }
-
     }
 
     private fun toBoolean(n: Int): Boolean {
