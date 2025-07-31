@@ -19,4 +19,13 @@
         <item name="android:windowSoftInputMode">adjustResize</item>
 
     </style>
+
+    <style name="SpinnerTheme" parent="android:Widget.Material.Spinner.Underlined">
+        <item name="android:background">@drawable/spinner_dropdown_background
+        </item>
+        <item name="android:popupBackground">@drawable/spinner_dropdown_background
+        </item>
+
+        <item name="android:textAlignment">textStart</item>
+    </style>
 </resources>

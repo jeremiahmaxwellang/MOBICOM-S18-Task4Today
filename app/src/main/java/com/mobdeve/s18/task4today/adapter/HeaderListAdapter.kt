@@ -19,6 +19,7 @@ import com.mobdeve.s18.task4today.DbHelper
 import com.mobdeve.s18.task4today.TaskModel
 
 // HeaderListAdapter.kt
+// Adapter for the Parent Recycler View for Header
 class HeaderListAdapter(
     private val headers: List<HeaderModel>,
     private val layoutResId: Int, // Parameter to allow dynamic layout
