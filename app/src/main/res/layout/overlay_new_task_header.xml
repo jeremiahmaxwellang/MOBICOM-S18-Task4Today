@@ -51,7 +51,7 @@
             android:id="@+id/taskInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/overlay_background"
+            android:background="@drawable/spinner_rounded"
             android:hint="Enter Task Header Name"
             android:inputType="text"
             android:padding="8dp"
@@ -73,8 +73,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@color/overlay_background"
+            android:background="@drawable/spinner_rounded"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
             android:spinnerMode="dropdown" />
+
 
         <!-- Confirm / Cancel Buttons -->
         <LinearLayout
