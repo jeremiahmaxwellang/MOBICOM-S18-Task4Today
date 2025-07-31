@@ -30,6 +30,6 @@ class TaskModel(
         private set
 
     // Constructor without ID
-    constructor(status: Int, task: String, date: String, time: String) : this(0, 0, status, task, date, time)
+    constructor(header_id: Int, status: Int, task: String, date: String, time: String) : this(0, header_id, status, task, date, time)
 
 }

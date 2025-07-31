@@ -14,7 +14,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.graphics.drawable.DrawableCompat
-import com.mobdeve.s18.task4today.AddNewTask
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.DbHelper
 import com.mobdeve.s18.task4today.TaskModel
 
@@ -22,6 +22,7 @@ import com.mobdeve.s18.task4today.TaskModel
 class HeaderListAdapter(
     private val headers: List<HeaderModel>,
     private val layoutResId: Int, // Parameter to allow dynamic layout
+    private var dbHelper : DbHelper,
     private val listener: OnHeaderActionListener //REQUIRED ADD BTN Action listener
 ) :
 
@@ -30,6 +31,9 @@ RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
     inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleText: TextView = itemView.findViewById(R.id.headerTitle)
         val addButton: ImageView? = itemView.findViewById(R.id.headerAddButton) // Safe optional
+
+        // Nested Task RecyclerView
+        val taskRecyclerView: RecyclerView? = itemView.findViewById(R.id.taskListRecyclerView)
 
         fun bind(header: HeaderModel){
             titleText.text = header.title
@@ -49,7 +53,6 @@ RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
 
     override fun onBindViewHolder(holder: HeaderViewHolder, position: Int) {
         val header = headers[position]
-//        holder.titleText.text = header.title
         holder.bind(header)
 
         // Tint the background drawable with the header's color
@@ -63,9 +66,14 @@ RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
                 // Fallback tint
                 DrawableCompat.setTint(background, Color.GRAY)
             }
+        } // end of if statement
 
+        // Nested Task RecyclerView
+        holder.taskRecyclerView?.setHasFixedSize(true)
+        holder.taskRecyclerView?.layoutManager = LinearLayoutManager(holder.itemView.context)
+        val adapter = TaskAdapter(header.taskList, dbHelper)
+        holder.taskRecyclerView?.adapter = adapter
 
-        }
     }
 
     override fun getItemCount(): Int = headers.size

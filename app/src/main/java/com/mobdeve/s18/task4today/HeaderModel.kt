@@ -19,7 +19,6 @@ class HeaderModel(
         private set
 
     var taskList : ArrayList<TaskModel> = taskList
-        private set
 
     // Constructor without ID
     constructor(title: String, color: String, taskList : ArrayList<TaskModel>) : this(0, title, color, taskList)

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mobdeve.s18.task4today.AddNewTask
 import com.mobdeve.s18.task4today.DbHelper
 import com.mobdeve.s18.task4today.R
 import com.mobdeve.s18.task4today.TaskModel
@@ -58,6 +57,7 @@ class TaskAdapter(
     }
 
     // TODO: editTask()
+    // dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
 
     // TODO: deleteTask()
 

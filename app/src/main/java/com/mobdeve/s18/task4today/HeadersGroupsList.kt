@@ -12,6 +12,8 @@ import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
 
 class HeaderGroupsList : AppCompatActivity() {
 
+    private lateinit var dbHelper : DbHelper
+
     private lateinit var addBtn: ImageButton
     private lateinit var backBtn: ImageButton
     private lateinit var overlayAddHeader: View
@@ -30,12 +32,12 @@ class HeaderGroupsList : AppCompatActivity() {
         completeTaskHeaderList = findViewById(R.id.completeTaskHeaderList)
         completeTaskHeaderList.layoutManager = LinearLayoutManager(this)
 
-        val dbHelper = DbHelper(this)
+        dbHelper = DbHelper(this)
         val headerList = dbHelper.getAllHeaders()
-        val adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, object : OnHeaderActionListener{
+        val adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener{
             override fun onAddTaskClicked(header: HeaderModel){}
         })
-        completeTaskHeaderList.adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, object : OnHeaderActionListener{
+        completeTaskHeaderList.adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener{
             override fun onAddTaskClicked(header: HeaderModel){}
         })
 
@@ -85,7 +87,7 @@ class HeaderGroupsList : AppCompatActivity() {
 
                 // Refresh the list
                 val updatedHeaders = dbHelper.getAllHeaders()
-                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, object : OnHeaderActionListener{
+                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener{
                     override fun onAddTaskClicked(header: HeaderModel){}
                 })
 

@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -45,11 +47,13 @@ class TaskListFragment : Fragment() {
         val headerList = dbHelper.getAllHeaders()
 
         // 3. Set up adapter using format_task_list_header.xml
-        adapter = HeaderListAdapter(headerList, R.layout.format_task_list_header,
+        adapter = HeaderListAdapter(headerList, R.layout.format_task_list_header, dbHelper,
             object : OnHeaderActionListener {
+                val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
+
+
                 // Open ADD TASK Overlay
                 override fun onAddTaskClicked(header: HeaderModel) {
-                    val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
                     newTaskOverlay.visibility = View.VISIBLE
 
                     // Close overlay when clicking outside the modal
@@ -61,12 +65,40 @@ class TaskListFragment : Fragment() {
                         }
                     }
 
+                    // CONFIRM BUTTON: Add Task
+                    val confirmButton: Button = binding.root.findViewById(R.id.confirmButton)
+                    confirmButton.setOnClickListener {
+                        val taskInput: EditText = newTaskOverlay.findViewById(R.id.taskInput)
+                        var text = taskInput.text.toString()
+
+                        // Insert new task if not empty
+                        if (text.isNotEmpty()){
+                            // DONE: Test if header.id passed is the correct one
+                            // TODO: Fix date and time
+                            val task = TaskModel(header.id, 0, text, currentDate, "12:00AM")
+                            dbHelper.insertTasks(task)
+                            newTaskOverlay.visibility = View.GONE
+
+                            // TODO: Refresh Display
+                            val updatedTasks = dbHelper.getAllTasks()
+//                            header.taskList.clear()
+
+                            // Refresh list Not working
+                            val allTasks = dbHelper.getAllTasks() // list of ALL tasks
+                            header.taskList = ArrayList(allTasks.filter{ it.header_id == id })
+                            taskInput.text.clear()
+
+                        }
+
+                    }
+
                     // CANCEL BUTTON: Close overlay
                     val cancelButton: Button = binding.root.findViewById(R.id.cancelButton)
                     cancelButton.setOnClickListener {
                         newTaskOverlay.visibility = View.GONE
                     }
                 }
+
             })
         taskRecyclerView.adapter = adapter
 
