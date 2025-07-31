@@ -71,7 +71,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     override fun onCreate(db: SQLiteDatabase){
         db.execSQL(DbReferences.CREATE_HEADERS_TABLE)
         db.execSQL(DbReferences.CREATE_TASKS_TABLE)
-        db.execSQL(DbReferences.INSERT_MY_HEADER) // insert sample header on first run of app
+        //db.execSQL(DbReferences.INSERT_MY_HEADER) // insert sample header on first run of app
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int){

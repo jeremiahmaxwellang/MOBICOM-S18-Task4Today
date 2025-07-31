@@ -8,7 +8,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import androidx.core.content.ContextCompat
-import com.mobdeve.s18.task4today.adapter.ToDoAdapter
+import com.mobdeve.s18.task4today.ToDoAdapter
 import kotlin.Int
 
 // RecyclerItemTouchHelper -> swipe task left to [Edit], right to [Delete]

@@ -6,11 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mobdeve.s18.task4today.adapter.ToDoAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.activity.addCallback
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
 import com.mobdeve.s18.task4today.databinding.FragmentTaskListBinding
@@ -42,11 +41,11 @@ class TaskListFragment : Fragment() {
         taskRecyclerView = binding.taskRecyclerView
         taskRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // 2. Fetch headers from database
+        // 2. Fetch headers from the database
         dbHelper = DbHelper(requireContext())
         val headerList = dbHelper.getAllHeaders()
 
-        // 3. Set up adapter using format_task_list_header.xml
+        // 3. Set up adapter using the format_task_list_header.xml layout and pass in the headers
         adapter = HeaderListAdapter(headerList, R.layout.format_task_list_header,
             object : OnHeaderActionListener {
                 // Open ADD TASK Overlay
@@ -87,7 +86,6 @@ class TaskListFragment : Fragment() {
         }
     }
 
-
     private fun getPreviousDate(date: String): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val currentDate = sdf.parse(date)
@@ -116,6 +114,4 @@ class TaskListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }
