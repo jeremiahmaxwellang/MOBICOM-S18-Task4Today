@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.adapter.ToDoAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.activity.addCallback
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
 import com.mobdeve.s18.task4today.databinding.FragmentTaskListBinding
@@ -50,43 +48,16 @@ class TaskListFragment : Fragment() {
         adapter = HeaderListAdapter(headerList, R.layout.format_task_list_header,
             object : OnHeaderActionListener {
                 // Open ADD TASK Overlay
-                override fun onAddTaskClicked(header: HeaderModel) {
+                override fun onAddTaskClicked(header: HeaderModel){
                     val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
                     newTaskOverlay.visibility = View.VISIBLE
 
-                    // Close overlay when clicking outside the modal
-                    newTaskOverlay.setOnClickListener {
-                        // Ignore click if the user clicks inside the modal container
-                        val modalContainer: View = binding.root.findViewById(R.id.modalContainer)
-                        if (it != modalContainer) {
-                            newTaskOverlay.visibility = View.GONE
-                        }
-                    }
-
-                    // Close overlay when clicking the cancel button
-                    val cancelButton: Button = binding.root.findViewById(R.id.cancelButton)
-                    cancelButton.setOnClickListener {
-                        newTaskOverlay.visibility = View.GONE
-                    }
                 }
             })
         taskRecyclerView.adapter = adapter
+
+
     }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        // Handle back button press inside the fragment
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
-            if (newTaskOverlay.visibility == View.VISIBLE) {
-                newTaskOverlay.visibility = View.GONE
-            } else {
-                requireActivity().onBackPressed()  // Default back button behavior
-            }
-        }
-    }
-
 
     private fun getPreviousDate(date: String): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
