@@ -14,32 +14,21 @@
         android:layout_height="wrap_content"
         android:padding="8dp">
 
-        <LinearLayout
-            android:id="@+id/boxAndText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/todoCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:buttonTint="@android:color/holo_green_dark"
+            android:text="Work on MOBICOM MCO3" />
 
-            <CheckBox
-                android:id="@+id/todoCheckBox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@android:color/holo_green_dark" />
-
-            <TextView
-                android:id="@+id/taskName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Work on MOBICOM MCO3" />
-
-            <TextView
-                android:id="@+id/todoTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/taskName"
-                android:text="12:59 AM" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/todoTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBaseline="@id/todoCheckBox"
+            android:text="12:59 AM" />
 
     </RelativeLayout>
 
