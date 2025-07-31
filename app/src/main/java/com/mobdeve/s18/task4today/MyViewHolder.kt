@@ -6,6 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 
 class MyViewHolder(view : View) : RecyclerView.ViewHolder(view){
     // Checkbox
-    val task : CheckBox = view.findViewById(R.id.todoCheckBox)
+    val task : CheckBox = view.findViewById(R.id.taskCheckBox)
 
 }

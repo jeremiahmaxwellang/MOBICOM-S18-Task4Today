@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -48,10 +49,24 @@ class TaskListFragment : Fragment() {
         adapter = HeaderListAdapter(headerList, R.layout.format_task_list_header,
             object : OnHeaderActionListener {
                 // Open ADD TASK Overlay
-                override fun onAddTaskClicked(header: HeaderModel){
+                override fun onAddTaskClicked(header: HeaderModel) {
                     val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
                     newTaskOverlay.visibility = View.VISIBLE
 
+                    // Close overlay when clicking outside the modal
+                    newTaskOverlay.setOnClickListener {
+                        // Ignore click if the user clicks inside the modal container
+                        val modalContainer: View = binding.root.findViewById(R.id.modalContainer)
+                        if(it != modalContainer) {
+                            newTaskOverlay.visibility = View.GONE
+                        }
+                    }
+
+                    // CANCEL BUTTON: Close overlay
+                    val cancelButton: Button = binding.root.findViewById(R.id.cancelButton)
+                    cancelButton.setOnClickListener {
+                        newTaskOverlay.visibility = View.GONE
+                    }
                 }
             })
         taskRecyclerView.adapter = adapter
