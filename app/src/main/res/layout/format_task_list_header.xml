@@ -10,6 +10,7 @@
     <!-- Header Title (e.g., MOBICOM) -->
 
     <LinearLayout
+        android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:orientation="horizontal"
