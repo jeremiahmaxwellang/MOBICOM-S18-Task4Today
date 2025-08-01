@@ -17,6 +17,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="icon_selected">#1A00FF</color>
 
+    <!-- Theme aware colors -->
+    <color name="card_background_light">#FFFFFF</color> <!-- or any light color -->
+    <color name="card_background_dark">#000000</color> <!-- pure black -->
+
     <!-- Background and Text -->
     <color name="overlay_background">#FFFFFF</color>
     <color name="text_primary">#000000</color>
@@ -32,5 +36,7 @@
     <!-- AM/PM Toggle -->
     <color name="toggle_checked">#2196F3</color>
     <color name="toggle_unchecked">#DDDDDD</color>
+
+    <color name="colorOutline">#DDDDDD</color> <!-- light gray -->
 
 </resources>
