@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:orientation="horizontal"
+    android:paddingHorizontal="12dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/header_background"
+    android:layout_marginTop="12dp">
+
+    <!-- Header Title (e.g., MOBICOM) -->
+    <TextView
+        android:id="@+id/headerTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="MOBICOM"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white" />
+
+    <!-- Plus (+) Button -->
+    <ImageView
+        android:id="@+id/headerAddButton"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="Add Task"
+        android:src="@drawable/ic_add"
+        android:tint="@color/white" />
+
+    <!--
+    <Button
+        android:id="@+id/resetDbButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset DB" />
+
+    Database Reset Button -->
+
+</LinearLayout>
