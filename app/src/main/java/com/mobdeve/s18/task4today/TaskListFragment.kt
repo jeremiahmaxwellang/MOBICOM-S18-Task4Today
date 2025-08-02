@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
@@ -22,9 +21,11 @@ class TaskListFragment : Fragment() {
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var adapter: HeaderListAdapter  // Define adapter at the class level
+    private lateinit var headerListAdapter: HeaderListAdapter  // Define adapter at the class level
     private lateinit var dbHelper: DbHelper // Declare dbHelper at class level
-    private lateinit var taskRecyclerView: RecyclerView // Declare taskRecyclerView at class level
+    private lateinit var headerRecyclerView: RecyclerView // Declare taskRecyclerView at class level
+//    private lateinit var itemTouchHelper : ItemTouchHelper // Helper for swiping to edit/delete tasks
+
     var currentDate: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
     override fun onCreateView(
@@ -39,15 +40,15 @@ class TaskListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // 1. Initialize RecyclerView
-        taskRecyclerView = binding.taskRecyclerView
-        taskRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        headerRecyclerView = binding.headerRecyclerView
+        headerRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // 2. Fetch headers from database
         dbHelper = DbHelper(requireContext())
         val headerList = dbHelper.getAllHeaders()
 
-        // 3. Set up adapter using format_task_list_header.xml
-        adapter = HeaderListAdapter(headerList, R.layout.format_task_list_header, dbHelper,
+        // 3. Set up Header adapter using format_task_list_header.xml
+        headerListAdapter = HeaderListAdapter(headerList, R.layout.format_task_list_header, dbHelper,
             object : OnHeaderActionListener {
                 val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
 
@@ -100,7 +101,11 @@ class TaskListFragment : Fragment() {
                 }
 
             })
-        taskRecyclerView.adapter = adapter
+        headerRecyclerView.adapter = headerListAdapter
+
+        // Set up helper for swiping tasks
+//        itemTouchHelper = ItemTouchHelper(TaskItemTouchHelper(headerListAdapter.))
+//        itemTouchHelper.attachToRecyclerView(headerRecyclerView)
 
 
     }
