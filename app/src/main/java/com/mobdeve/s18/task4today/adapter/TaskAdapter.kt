@@ -1,11 +1,13 @@
 package com.mobdeve.s18.task4today.adapter
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.DbHelper
 import com.mobdeve.s18.task4today.R
@@ -36,14 +38,30 @@ class TaskAdapter(
         holder.taskCheckBox.setOnCheckedChangeListener(null) // Remove previous listener
         holder.taskCheckBox.isChecked = toBoolean(task.status) // Set checkbox
 
+        // Set the checkbox tint dynamically based on the current theme
+        val checkboxTint = if (isDarkModeEnabled(holder.itemView.context)) {
+            ContextCompat.getColor(holder.itemView.context, R.color.checkbox_tint_dark) // Dark mode tint
+        } else {
+            ContextCompat.getColor(holder.itemView.context, R.color.checkbox_tint_light) // Light mode tint
+        }
+
+        // Apply the tint to the checkbox
+        holder.taskCheckBox.buttonTintList = android.content.res.ColorStateList.valueOf(checkboxTint)
+
         holder.taskCheckBox.setOnCheckedChangeListener{ _, isChecked ->
             val status = if(isChecked) 1 else 0
             dbHelper.updateStatus(task.id, status)
         }
 
-        // set xml elements
+        // Set XML elements
         holder.taskName.text = task.task
         holder.taskTime.text = task.time
+    }
+
+    // Function to check if dark mode is enabled
+    private fun isDarkModeEnabled(context: Context): Boolean {
+        val nightModeFlags = context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK
+        return nightModeFlags == android.content.res.Configuration.UI_MODE_NIGHT_YES
     }
 
     override fun getItemCount(): Int {
@@ -57,6 +75,7 @@ class TaskAdapter(
     }
 
     // TODO: editTask()
+    // dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
     // dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
 
     // TODO: deleteTask()

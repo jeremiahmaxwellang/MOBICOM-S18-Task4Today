@@ -1,8 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="card_background_light">#FFFFFF</color> <!-- optional in night -->
-    <color name="card_background_dark">#000000</color>
-    <color name="colorOutline">#D1CACA</color> <!-- this should make more visible border in dark mode -->
-    <color name="checkbox_tint_dark">#FFFFFF</color> <!-- White in dark mode -->
+    <color name="colorPrimary">@android:color/holo_green_dark</color>
+    <color name="colorPrimaryDark">@android:color/holo_green_dark</color>
+
+    <!-- Main Theme Colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Main Overlay Theme Colors -->
+
+    <!-- Misc Colors -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="icon_selected">#1A00FF</color>
+
+    <!-- Theme aware colors -->
+    <color name="card_background_light">#FFFFFF</color> <!-- or any light color -->
+    <color name="card_background_dark">#000000</color> <!-- pure black -->
+
+    <color name="checkbox_tint_light">#154734</color> <!-- Default color (Black) in light mode -->
+    <color name="checkbox_tint_dark">#00C853</color> <!-- Green in dark mode -->
+
+    <!-- Background and Text -->
+    <color name="overlay_background">#000000</color> <!-- Change to a darker background -->
+    <color name="text_primary">#FFFFFF</color> <!-- Light text color for dark mode -->
+    <color name="text_secondary">#888888</color>
+
+    <!-- Input Borders -->
+    <color name="input_border">#202020</color> <!-- Darker border for dark mode -->
+
+    <!-- Button Colors -->
+    <color name="green_confirm">#00C853</color>
+    <color name="red_cancel">#D50000</color>
+
+    <!-- AM/PM Toggle -->
+    <color name="toggle_checked">#2196F3</color>
+    <color name="toggle_unchecked">#DDDDDD</color>
+
+    <color name="colorOutline">#DDDDDD</color> <!-- light gray -->
 
 </resources>
