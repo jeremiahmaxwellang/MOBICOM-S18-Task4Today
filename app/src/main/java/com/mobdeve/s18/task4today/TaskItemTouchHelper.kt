@@ -1,18 +1,17 @@
-package com.mobdeve.s18.task4today
-
 import android.graphics.Canvas
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.adapter.TaskAdapter
+import com.mobdeve.s18.task4today.R
 
 // TaskItemTouchHelper: class for swiping functionality on Tasks
 class TaskItemTouchHelper(
     private val taskAdapter: TaskAdapter
-) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
+) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
     // Only implementing this because ItemTouchHelper requires it
     override fun onMove(
@@ -29,7 +28,7 @@ class TaskItemTouchHelper(
         val position = viewHolder.bindingAdapterPosition
 
         // Swipe LEFT to Delete
-        if(direction == ItemTouchHelper.LEFT) {
+        if (direction == ItemTouchHelper.LEFT) {
             AlertDialog.Builder(context)
                 .setTitle("Delete Task")
                 .setMessage("Proceed with task deletion?")
@@ -62,20 +61,21 @@ class TaskItemTouchHelper(
         val backgroundCornerOffset = 20
 
         val icon: Drawable?
-        val background: ColorDrawable
+        val background: GradientDrawable = GradientDrawable()
 
         // EDIT COLOR: Green if SWIPE RIGHT
         if (dX > 0) {
             icon = ContextCompat.getDrawable(taskAdapter.getContext(), R.drawable.edit)
-            background =
-                ColorDrawable(ContextCompat.getColor(taskAdapter.getContext(), R.color.green_confirm))
+            background.setColor(ContextCompat.getColor(taskAdapter.getContext(), R.color.green_confirm))
         }
-
         // DELETE COLOR: Red if SWIPE LEFT
         else {
             icon = ContextCompat.getDrawable(taskAdapter.getContext(), R.drawable.delete)
-            background = ColorDrawable(ContextCompat.getColor(taskAdapter.getContext(), R.color.red_cancel))
+            background.setColor(ContextCompat.getColor(taskAdapter.getContext(), R.color.red_cancel))
         }
+
+        // Set the corner radius for all edges
+        background.cornerRadius = 30f  // Apply uniform rounded corners
 
         // Set Edit/Delete icon positions
         icon?.let {
@@ -92,8 +92,8 @@ class TaskItemTouchHelper(
                 background.setBounds(
                     itemView.left,
                     itemView.top,
-                    itemView.left + dX.toInt() +
-                            backgroundCornerOffset, itemView.bottom
+                    itemView.left + dX.toInt() + backgroundCornerOffset,
+                    itemView.bottom
                 )
             }
 
@@ -115,8 +115,6 @@ class TaskItemTouchHelper(
 
             background.draw(c)
             icon.draw(c)
-
         }
     } // end of onChildDraw
-
 }

@@ -17,7 +17,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.DbHelper
-import com.mobdeve.s18.task4today.TaskItemTouchHelper
+import TaskItemTouchHelper
 
 // HeaderListAdapter.kt
 // Adapter for the Parent Recycler View for Header
