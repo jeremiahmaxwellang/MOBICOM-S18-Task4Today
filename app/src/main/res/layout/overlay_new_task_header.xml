@@ -22,9 +22,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:text="Add Task Group"
-            android:textSize="18sp"
+            android:textSize="32sp"
             android:textStyle="bold" />
 
         <!-- Title -->
@@ -41,7 +40,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:text="Task Header Name"
             android:textColor="#000000"
             android:textSize="16sp" />
@@ -55,8 +54,11 @@
             android:hint="Enter Task Header Name"
             android:inputType="text"
             android:padding="8dp"
+            android:paddingStart="10dp"
             android:textColor="#000000"
-            android:textColorHint="#888888" />
+            android:textColorHint="#888888"
+            android:textSize="16sp"
+            android:layout_marginTop="8dp" />
 
         <!-- Color Selection Label -->
         <TextView
@@ -75,9 +77,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="@drawable/spinner_rounded"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:spinnerMode="dropdown" />
+            android:padding="5dp"
+            android:spinnerMode="dropdown"
+            android:textSize="16dp"/>
 
 
         <!-- Confirm / Cancel Buttons -->
