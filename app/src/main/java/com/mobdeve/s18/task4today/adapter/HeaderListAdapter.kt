@@ -26,7 +26,7 @@ class HeaderListAdapter(
     private val headers: ArrayList<HeaderModel>,
     private val layoutResId: Int, // Parameter to allow dynamic layout
     private var dbHelper : DbHelper,
-    private val listener: OnHeaderActionListener // REQUIRED ADD BTN Action listener
+    private val listener: OnHeaderActionListener? = null // REQUIRED ADD BTN Action listener
 ) : RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
 
     private lateinit var context: Context
@@ -41,14 +41,9 @@ class HeaderListAdapter(
         fun bind(header: HeaderModel) {
             titleText.text = header.title
             addButton?.setOnClickListener {
-                listener.onAddTaskClicked(header)
+                listener?.onAddTaskClicked(header)
             }
         }
-    }
-
-    // Getter of Child Task RecyclerView
-    fun getTaskRecyclerViewAt(position: Int): RecyclerView? {
-        return viewHolderMap[position]?.taskRecyclerView // get from HeaderViewHolder
     }
 
     // Getter for HeaderListAdapter's context (current activity)
@@ -129,6 +124,7 @@ class HeaderListAdapter(
             // Store all taskAdapters of every header
             taskAdapterMap[position]?.let { adapter ->
                 adapter.setTasks(ArrayList(updatedTasks))
+                notifyItemChanged(position)
             }
             notifyItemChanged(position)
         }

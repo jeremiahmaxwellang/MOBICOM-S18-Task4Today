@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
@@ -42,96 +41,65 @@ class TaskListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set dateLabel to date today
-        val dateLabel = _binding?.dateLabel
-        dateLabel?.setText(currentDate)
-
-        // Previous Day Button
-        _binding?.prevDayBtn?.setOnClickListener({
-            val prevDate = getPreviousDate(currentDate)
-            updateDateLabel(prevDate)
-        })
-
-        // Next Day Button
-        _binding?.nextDayBtn?.setOnClickListener({
-            val nextDate = getNextDate(currentDate)
-            updateDateLabel(nextDate)
-        })
-
-
         // Initialize RecyclerView
         headerRecyclerView = binding.headerRecyclerView
         headerRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Fetch headers from database
         dbHelper = DbHelper(requireContext())
-        val headerList = dbHelper.getAllHeaders()
+        var headerList = dbHelper.getAllHeaders(currentDate)
 
         // Set up adapter
         headerListAdapter = HeaderListAdapter(headerList, R.layout.format_task_list_header, dbHelper,
             object : OnHeaderActionListener {
                 override fun onAddTaskClicked(header: HeaderModel) {
-                    val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
-                    newTaskOverlay.visibility = View.VISIBLE
-
-                    val modalContainer: View = newTaskOverlay.findViewById(R.id.modalContainer)
-                    val taskInput: EditText = newTaskOverlay.findViewById(R.id.taskInput)
-                    val timeButton: Button = newTaskOverlay.findViewById(R.id.timeButton)
-                    val confirmButton: Button = newTaskOverlay.findViewById(R.id.confirmButton)
-                    val cancelButton: Button = newTaskOverlay.findViewById(R.id.cancelButton)
-
-                    // Reset previous values
-                    taskInput.text.clear()
-                    timeButton.text = "Select Time"
-                    var selectedTime = "12:00AM"
-
-                    // Show Time Picker when clicking "Select Time"
-                    timeButton.setOnClickListener {
-                        val calendar = Calendar.getInstance()
-                        val hour = calendar.get(Calendar.HOUR_OF_DAY)
-                        val minute = calendar.get(Calendar.MINUTE)
-
-                        val timePickerDialog = TimePickerDialog(
-                            ContextThemeWrapper(requireContext(), R.style.TimePickerDialogSpinner), // <-- use custom style
-                            { _, selectedHour, selectedMinute ->
-                                val amPmFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
-                                calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
-                                calendar.set(Calendar.MINUTE, selectedMinute)
-                                selectedTime = amPmFormat.format(calendar.time)
-                                timeButton.text = selectedTime
-                            },
-                            hour, minute, false
-                        )
-
-                        timePickerDialog.show()
-                    }
-
-                    // Close overlay when clicking outside modal
-                    newTaskOverlay.setOnClickListener {
-                        if (it != modalContainer) {
-                            newTaskOverlay.visibility = View.GONE
-                        }
-                    }
-
-                    // Confirm Button: Save task
-                    confirmButton.setOnClickListener {
-                        val text = taskInput.text.toString()
-                        if (text.isNotEmpty()) {
-                            val task = TaskModel(header.id, 0, text, currentDate, selectedTime)
-                            dbHelper.insertTasks(task)
-                            headerListAdapter.refreshTasksForHeader(header.id)
-                            newTaskOverlay.visibility = View.GONE
-                        }
-                    }
-
-                    // Cancel Button: Close overlay
-                    cancelButton.setOnClickListener {
-                        newTaskOverlay.visibility = View.GONE
-                    }
+                    setAddTaskListeners(header)
                 }
             })
 
         headerRecyclerView.adapter = headerListAdapter
+
+        // Set dateLabel to date today
+        val dateLabel = _binding?.dateLabel
+        dateLabel?.setText(currentDate)
+
+        // Change tasks on screen depending on the date
+        fun updateHeaderAdapter(date: String) {
+            // Get new headers
+            headerList.clear()
+            headerList.addAll(dbHelper.getAllHeaders(date))
+
+            // Create new adapter
+            headerListAdapter = HeaderListAdapter(headerList, R.layout.format_task_list_header, dbHelper, object : OnHeaderActionListener {
+                override fun onAddTaskClicked(header: HeaderModel) {
+                    setAddTaskListeners(header)
+                }
+            })
+
+            // Refresh displayed tasks
+            for(header in headerList){
+                headerListAdapter.refreshTasksForHeader(header.id)
+            }
+
+            binding.headerRecyclerView.adapter = headerListAdapter // rebind adapter
+
+        }
+
+        // Previous Day Button
+        _binding?.prevDayBtn?.setOnClickListener({
+            val prevDate = getPreviousDate(currentDate)
+            updateDateLabel(prevDate)
+
+            updateHeaderAdapter(prevDate)
+        })
+
+        // Next Day Button
+        _binding?.nextDayBtn?.setOnClickListener({
+            val nextDate = getNextDate(currentDate)
+            updateDateLabel(nextDate)
+
+            updateHeaderAdapter(nextDate)
+        })
     }
 
     // Function for getting the date yesterday
@@ -147,7 +115,7 @@ class TaskListFragment : Fragment() {
     // Function for updating the date label
     private fun updateDateLabel(date: String) {
         this.currentDate = date
-        binding.dateLabel.text = date
+        binding.dateLabel.text = this.currentDate
     }
 
     // Function for getting the date tomorrow
@@ -158,6 +126,66 @@ class TaskListFragment : Fragment() {
         calendar.time = currentDate
         calendar.add(Calendar.DAY_OF_YEAR, 1)
         return sdf.format(calendar.time)
+    }
+
+    fun setAddTaskListeners(header: HeaderModel) {
+        val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
+        newTaskOverlay.visibility = View.VISIBLE
+
+        val modalContainer: View = newTaskOverlay.findViewById(R.id.modalContainer)
+        val taskInput: EditText = newTaskOverlay.findViewById(R.id.taskInput)
+        val timeButton: Button = newTaskOverlay.findViewById(R.id.timeButton)
+        val confirmButton: Button = newTaskOverlay.findViewById(R.id.confirmButton)
+        val cancelButton: Button = newTaskOverlay.findViewById(R.id.cancelButton)
+
+        // Reset previous values
+        taskInput.text.clear()
+        timeButton.text = "Select Time"
+        var selectedTime = "12:00AM"
+
+        // Show Time Picker when clicking "Select Time"
+        timeButton.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val hour = calendar.get(Calendar.HOUR_OF_DAY)
+            val minute = calendar.get(Calendar.MINUTE)
+
+            val timePickerDialog = TimePickerDialog(
+                ContextThemeWrapper(requireContext(), R.style.TimePickerDialogSpinner), // <-- use custom style
+                { _, selectedHour, selectedMinute ->
+                    val amPmFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+                    calendar.set(Calendar.HOUR_OF_DAY, selectedHour)
+                    calendar.set(Calendar.MINUTE, selectedMinute)
+                    selectedTime = amPmFormat.format(calendar.time)
+                    timeButton.text = selectedTime
+                },
+                hour, minute, false
+            )
+
+            timePickerDialog.show()
+        }
+
+        // Close overlay when clicking outside modal
+        newTaskOverlay.setOnClickListener {
+            if (it != modalContainer) {
+                newTaskOverlay.visibility = View.GONE
+            }
+        }
+
+        // Confirm Button: Save task
+        confirmButton.setOnClickListener {
+            val text = taskInput.text.toString()
+            if (text.isNotEmpty()) {
+                val task = TaskModel(header.id, 0, text, currentDate, selectedTime)
+                dbHelper.insertTasks(task)
+                headerListAdapter.refreshTasksForHeader(header.id)
+                newTaskOverlay.visibility = View.GONE
+            }
+        }
+
+        // Cancel Button: Close overlay
+        cancelButton.setOnClickListener {
+            newTaskOverlay.visibility = View.GONE
+        }
     }
 
     override fun onDestroyView() {

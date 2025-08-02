@@ -20,6 +20,8 @@ class MainActivity : AppCompatActivity() {
 
         // Load default fragment (TaskListFragment with RecyclerView)
         replaceFragment(TaskListFragment())
+        binding.bottomNavigation.menu.findItem(R.id.nav_tasks)
+                .setIcon(R.drawable.ic_tasks_clicked)
 
         // Set up bottom navigation
         binding.bottomNavigation.setOnItemSelectedListener { item ->

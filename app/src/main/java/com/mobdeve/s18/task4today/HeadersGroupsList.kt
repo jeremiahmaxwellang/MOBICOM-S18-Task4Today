@@ -14,6 +14,9 @@ import com.mobdeve.s18.task4today.TaskHeader_ColorOption.TaskHeaderColorOption
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 //For format_view_header_list.xml
 class HeaderGroupsList : AppCompatActivity() {
@@ -27,6 +30,7 @@ class HeaderGroupsList : AppCompatActivity() {
     private lateinit var confirmButton: Button
     private lateinit var cancelButton: Button
     private lateinit var headerRecyclerView: RecyclerView
+    var currentDate: String = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,11 +41,9 @@ class HeaderGroupsList : AppCompatActivity() {
         headerRecyclerView.layoutManager = LinearLayoutManager(this)
 
         dbHelper = DbHelper(this)
-        val headerList = dbHelper.getAllHeaders()
+        val headerList = dbHelper.getAllHeaders(currentDate)
 
-        val headerListAdapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
-            override fun onAddTaskClicked(header: HeaderModel) {}
-        })
+        val headerListAdapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, null)
         headerRecyclerView.adapter = headerListAdapter
 
         // Set up helper for swiping headers
@@ -105,10 +107,8 @@ class HeaderGroupsList : AppCompatActivity() {
                 }
 
                 // Refresh the list
-                val updatedHeaders = dbHelper.getAllHeaders()
-                headerRecyclerView.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
-                    override fun onAddTaskClicked(header: HeaderModel) {}
-                })
+                val updatedHeaders = dbHelper.getAllHeaders(currentDate)
+                headerRecyclerView.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, null)
 
                 overlayAddHeader.visibility = View.GONE
                 taskNameInput.text.clear()

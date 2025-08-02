@@ -84,7 +84,6 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     }
 
     // Inserts headers into the db
-    // TODO: Call insertHeaders where needed
     fun insertHeaders(header: HeaderModel) {
         sqliteDatabase = writableDatabase
         val cv = ContentValues().apply { // SQLite auto-generates the ID
@@ -97,7 +96,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     // Inserts tasks into the db
     fun insertTasks(task : TaskModel){
         sqliteDatabase = writableDatabase
-        var cv = ContentValues().apply {
+        val cv = ContentValues().apply {
             put(DbReferences.TASK_HEADER_ID, task.header_id)
             put(DbReferences.TASK, task.task) //in Java: task.getTask()
             put(DbReferences.STATUS, task.status)
@@ -123,12 +122,12 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
                         // While cursor is not null
                         if (cursor.moveToFirst()) {
                             do {
-                                var id = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.TASK_ID))
-                                var header_id = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.TASK_HEADER_ID))
-                                var taskItem = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.TASK))
-                                var status = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.STATUS))
-                                var date = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.DATE))
-                                var time = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.TIME))
+                                val id = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.TASK_ID))
+                                val header_id = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.TASK_HEADER_ID))
+                                val taskItem = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.TASK))
+                                val status = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.STATUS))
+                                val date = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.DATE))
+                                val time = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.TIME))
 
                                 val task = TaskModel(id, header_id, status, taskItem, date, time)
                                 taskList.add(task)
@@ -149,8 +148,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     }
 
     // Fetch all Task Headers (Categories) from the db
-    // TODO: call this function in MainActivity or the Tasks Activity
-    fun getAllHeaders() : ArrayList<HeaderModel>{
+    fun getAllHeaders(currentDate: String) : ArrayList<HeaderModel>{
         val headerList = ArrayList<HeaderModel>()
         val allTasks = getAllTasks() // list of ALL tasks
 
@@ -167,8 +165,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
                             val title = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.HEADER_TITLE))
                             val color = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.HEADER_COLOR))
 
-                            // list of tasks under this header (category)
-                            val taskList = ArrayList(allTasks.filter{ it.header_id == id })
+                            // list of tasks TODAY under this header (category)
+                            val taskList = ArrayList(allTasks.filter{ it.header_id == id && it.date == currentDate})
 
                             val header = HeaderModel(id, title, color, taskList)
 
