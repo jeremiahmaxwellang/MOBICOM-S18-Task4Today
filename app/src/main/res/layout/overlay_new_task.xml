@@ -72,7 +72,7 @@
             android:backgroundTint="@color/text_secondary"
             android:text="Select Time"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"/>
+            android:textSize="14sp"/>
 
         <!-- Confirm / Cancel Buttons -->
         <LinearLayout
