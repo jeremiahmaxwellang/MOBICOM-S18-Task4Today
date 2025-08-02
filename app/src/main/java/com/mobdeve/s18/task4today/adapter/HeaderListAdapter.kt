@@ -11,15 +11,11 @@ import com.mobdeve.s18.task4today.R
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.widget.LinearLayout
-import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.DbHelper
-import com.mobdeve.s18.task4today.TaskModel
 
 // HeaderListAdapter.kt
 // Adapter for the Parent Recycler View for Header
@@ -30,10 +26,14 @@ class HeaderListAdapter(
     private val listener: OnHeaderActionListener // REQUIRED ADD BTN Action listener
 ) : RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
 
+    private lateinit var context: Context
+    private val viewHolderMap = mutableMapOf<Int, HeaderViewHolder>() // Store ViewHolder here to access the child recyclerView
+    private val taskAdapterMap = mutableMapOf<Int, TaskAdapter>() // store all the taskAdapters of each header's recyclerView
+
     inner class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleText: TextView = itemView.findViewById(R.id.headerTitle)
         val addButton: ImageView? = itemView.findViewById(R.id.headerAddButton) // Safe optional
-        val taskRecyclerView: RecyclerView? = itemView.findViewById(R.id.taskListRecyclerView)
+        val taskRecyclerView: RecyclerView? = itemView.findViewById(R.id.taskListRecyclerView) // Optional child recyclerView
 
         fun bind(header: HeaderModel) {
             titleText.text = header.title
@@ -43,7 +43,14 @@ class HeaderListAdapter(
         }
     }
 
+    // Getter of Child Task RecyclerView
+    fun getTaskRecyclerViewAt(position: Int): RecyclerView? {
+        return viewHolderMap[position]?.taskRecyclerView // get from HeaderViewHolder
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
+        this.context = parent.context // Set adapter's context to current activity
+
         val view = LayoutInflater.from(parent.context).inflate(layoutResId, parent, false) // The layout is now dynamic
         return HeaderViewHolder(view)
     }
@@ -51,6 +58,7 @@ class HeaderListAdapter(
     override fun onBindViewHolder(holder: HeaderViewHolder, position: Int) {
         val header = headers[position]  // Get the header for this position
         holder.bind(header)
+        viewHolderMap[position] = holder
 
         // Get the headerLayout for the current item
         val headerLayout = holder.itemView.findViewById<LinearLayout>(R.id.headerLayout)
@@ -80,14 +88,31 @@ class HeaderListAdapter(
             }
         }
 
-        // Set up RecyclerView for nested tasks
-        holder.taskRecyclerView?.setHasFixedSize(true)
-        holder.taskRecyclerView?.layoutManager = LinearLayoutManager(holder.itemView.context)
-        val adapter = TaskAdapter(header.taskList, dbHelper)
-        holder.taskRecyclerView?.adapter = adapter
+        // Set up this Header's child recyclerView
+        holder.taskRecyclerView?.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(holder.itemView.context)
+            adapter = TaskAdapter(header.taskList, dbHelper, this.context).also { taskAdapter ->
+                taskAdapterMap[position] = taskAdapter // store all the taskAdapters of each header's taskRecyclerView
+            }
+        }
     }
 
     override fun getItemCount(): Int = headers.size
+
+    // Refresh this header's tasks after Add/Update
+    fun refreshTasksForHeader(headerId: Int) {
+        val position = headers.indexOfFirst { it.id == headerId }
+        if (position != -1) {
+            val updatedTasks = dbHelper.getAllTasks().filter { it.header_id == headerId } // get tasks from DB
+            headers[position].taskList = ArrayList(updatedTasks)
+
+            taskAdapterMap[position]?.let { adapter ->
+                adapter.setTasks(ArrayList(updatedTasks))
+            }
+            notifyItemChanged(position)
+        }
+    }
 }
 
 interface OnHeaderActionListener {

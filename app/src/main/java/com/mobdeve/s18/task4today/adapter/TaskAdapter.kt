@@ -15,7 +15,8 @@ import com.mobdeve.s18.task4today.TaskModel
 
 class TaskAdapter(
     private var taskList: ArrayList<TaskModel>,
-    private var dbHelper : DbHelper
+    private var dbHelper : DbHelper,
+    private var context: Context
 ): RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     inner class TaskViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -23,6 +24,11 @@ class TaskAdapter(
         val taskCheckBox = itemView.findViewById<CheckBox>(R.id.taskCheckBox)
         val taskName = itemView.findViewById<TextView>(R.id.taskName)
         val taskTime = itemView.findViewById<TextView>(R.id.taskTime)
+    }
+
+    // Getter for TaskAdapter's context (current activity)
+    fun getContext() : Context {
+        return this.context
     }
 
     override fun onCreateViewHolder(header: ViewGroup, ViewType: Int) : TaskViewHolder {
@@ -53,7 +59,7 @@ class TaskAdapter(
             dbHelper.updateStatus(task.id, status)
         }
 
-        // Set XML elements
+        // set xml elements
         holder.taskName.text = task.task
         holder.taskTime.text = task.time
     }
@@ -75,7 +81,6 @@ class TaskAdapter(
     }
 
     // TODO: editTask()
-    // dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
     // dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
 
     // TODO: deleteTask()

@@ -21,10 +21,12 @@ class TaskListFragment : Fragment() {
     private var _binding: FragmentTaskListBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var headerListAdapter: HeaderListAdapter  // Define adapter at the class level
+    private lateinit var headerRecyclerView: RecyclerView // Parent recyclerView of tasks
+    private lateinit var taskRecyclerView: RecyclerView // Child recyclerView of header
+    private lateinit var headerListAdapter: HeaderListAdapter  // Adapter for headerRecyclerView
+
     private lateinit var dbHelper: DbHelper // Declare dbHelper at class level
-    private lateinit var headerRecyclerView: RecyclerView // Declare taskRecyclerView at class level
-//    private lateinit var itemTouchHelper : ItemTouchHelper // Helper for swiping to edit/delete tasks
+    private lateinit var itemTouchHelper : ItemTouchHelper // Helper for swiping to edit/delete tasks
 
     var currentDate: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
@@ -51,7 +53,6 @@ class TaskListFragment : Fragment() {
         headerListAdapter = HeaderListAdapter(headerList, R.layout.format_task_list_header, dbHelper,
             object : OnHeaderActionListener {
                 val newTaskOverlay: View = binding.root.findViewById(R.id.overlayNewTask)
-
 
                 // Open ADD TASK Overlay
                 override fun onAddTaskClicked(header: HeaderModel) {
@@ -80,13 +81,8 @@ class TaskListFragment : Fragment() {
                             dbHelper.insertTasks(task)
                             newTaskOverlay.visibility = View.GONE
 
-                            // TODO: Refresh Display
-                            val updatedTasks = dbHelper.getAllTasks()
-//                            header.taskList.clear()
-
-                            // Refresh list Not working
-                            val allTasks = dbHelper.getAllTasks() // list of ALL tasks
-                            header.taskList = ArrayList(allTasks.filter{ it.header_id == id })
+                            // Refresh Display
+                            headerListAdapter.refreshTasksForHeader(header.id)
                             taskInput.text.clear()
 
                         }
@@ -101,6 +97,8 @@ class TaskListFragment : Fragment() {
                 }
 
             })
+
+        // Apply to the RecyclerView's Header adapter
         headerRecyclerView.adapter = headerListAdapter
 
         // Set up helper for swiping tasks
