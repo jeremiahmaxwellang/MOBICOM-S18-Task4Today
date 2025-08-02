@@ -28,18 +28,36 @@ class TaskListFragment : Fragment() {
 
     private lateinit var dbHelper: DbHelper
 
-    var currentDate: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+    var currentDate: String = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTaskListBinding.inflate(inflater, container, false)
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Set dateLabel to date today
+        val dateLabel = _binding?.dateLabel
+        dateLabel?.setText(currentDate)
+
+        // Previous Day Button
+        _binding?.prevDayBtn?.setOnClickListener({
+            val prevDate = getPreviousDate(currentDate)
+            updateDateLabel(prevDate)
+        })
+
+        // Next Day Button
+        _binding?.nextDayBtn?.setOnClickListener({
+            val nextDate = getNextDate(currentDate)
+            updateDateLabel(nextDate)
+        })
+
 
         // Initialize RecyclerView
         headerRecyclerView = binding.headerRecyclerView
@@ -116,8 +134,9 @@ class TaskListFragment : Fragment() {
         headerRecyclerView.adapter = headerListAdapter
     }
 
+    // Function for getting the date yesterday
     private fun getPreviousDate(date: String): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val sdf = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
         val currentDate = sdf.parse(date)
         val calendar = Calendar.getInstance()
         calendar.time = currentDate
@@ -125,14 +144,15 @@ class TaskListFragment : Fragment() {
         return sdf.format(calendar.time)
     }
 
-    private fun updateDateLabel() {
-        val sdf = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
-        val formattedDate = sdf.format(SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(currentDate)!!)
-        binding.dateLabel.text = formattedDate
+    // Function for updating the date label
+    private fun updateDateLabel(date: String) {
+        this.currentDate = date
+        binding.dateLabel.text = date
     }
 
+    // Function for getting the date tomorrow
     private fun getNextDate(date: String): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val sdf = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault())
         val currentDate = sdf.parse(date)
         val calendar = Calendar.getInstance()
         calendar.time = currentDate
