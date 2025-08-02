@@ -21,6 +21,8 @@
     <color name="card_background_light">#FFFFFF</color> <!-- or any light color -->
     <color name="card_background_dark">#000000</color> <!-- pure black -->
 
+    <color name="checkbox_tint_light">#000000</color> <!-- Default color (Black) in light mode -->
+
     <!-- Background and Text -->
     <color name="overlay_background">#FFFFFF</color>
     <color name="text_primary">#000000</color>

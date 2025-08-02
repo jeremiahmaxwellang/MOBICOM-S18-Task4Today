@@ -3,4 +3,6 @@
     <color name="card_background_light">#FFFFFF</color> <!-- optional in night -->
     <color name="card_background_dark">#000000</color>
     <color name="colorOutline">#D1CACA</color> <!-- this should make more visible border in dark mode -->
+    <color name="checkbox_tint_dark">#FFFFFF</color> <!-- White in dark mode -->
+
 </resources>

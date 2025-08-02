@@ -22,14 +22,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-        <CheckBox
-            android:id="@+id/taskCheckBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:buttonTint="@android:color/black" />
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/taskCheckBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                app:checkboxTint="?attr/checkboxTint" />
 
-        <TextView
+            <TextView
             android:id="@+id/taskName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
