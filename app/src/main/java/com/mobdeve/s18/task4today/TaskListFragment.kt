@@ -26,7 +26,6 @@ class TaskListFragment : Fragment() {
     private lateinit var headerListAdapter: HeaderListAdapter  // Adapter for headerRecyclerView
 
     private lateinit var dbHelper: DbHelper // Declare dbHelper at class level
-    private lateinit var itemTouchHelper : ItemTouchHelper // Helper for swiping to edit/delete tasks
 
     var currentDate: String = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
@@ -100,11 +99,6 @@ class TaskListFragment : Fragment() {
 
         // Apply to the RecyclerView's Header adapter
         headerRecyclerView.adapter = headerListAdapter
-
-        // Set up helper for swiping tasks
-//        itemTouchHelper = ItemTouchHelper(TaskItemTouchHelper(headerListAdapter.))
-//        itemTouchHelper.attachToRecyclerView(headerRecyclerView)
-
 
     }
 

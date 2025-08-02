@@ -14,8 +14,10 @@ import android.widget.LinearLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.DbHelper
+import com.mobdeve.s18.task4today.TaskItemTouchHelper
 
 // HeaderListAdapter.kt
 // Adapter for the Parent Recycler View for Header
@@ -92,9 +94,15 @@ class HeaderListAdapter(
         holder.taskRecyclerView?.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(holder.itemView.context)
-            adapter = TaskAdapter(header.taskList, dbHelper, this.context).also { taskAdapter ->
-                taskAdapterMap[position] = taskAdapter // store all the taskAdapters of each header's taskRecyclerView
-            }
+
+            val taskAdapter = TaskAdapter(header.taskList, dbHelper, this.context)
+            adapter = taskAdapter // set adapter of taskRecyclerView
+            taskAdapterMap[position] = taskAdapter // store all the taskAdapters of each header's taskRecyclerView
+
+
+            // Set up helper for swiping tasks
+            val itemTouchHelper = ItemTouchHelper(TaskItemTouchHelper(taskAdapter))
+            itemTouchHelper.attachToRecyclerView(this)
         }
     }
 
@@ -107,6 +115,7 @@ class HeaderListAdapter(
             val updatedTasks = dbHelper.getAllTasks().filter { it.header_id == headerId } // get tasks from DB
             headers[position].taskList = ArrayList(updatedTasks)
 
+            // Store all taskAdapters of every header
             taskAdapterMap[position]?.let { adapter ->
                 adapter.setTasks(ArrayList(updatedTasks))
             }

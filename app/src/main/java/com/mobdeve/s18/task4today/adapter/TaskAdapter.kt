@@ -80,10 +80,26 @@ class TaskAdapter(
         notifyDataSetChanged()
     }
 
-    // TODO: editTask()
-    // dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
+    // TODO: Edit task (Either an "Edit task" overlay should pop up, or just directly edit the task text nalang)
+    fun editTask(position: Int){
+        val task = taskList[position]
+        val bundle = Bundle().apply{
+            putInt("id", task.id)
+            putString("task", task.task) // Edit text inside task
+        }
 
-    // TODO: deleteTask()
+//        dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
+
+        setTasks(taskList) // refresh displayed taskList
+    }
+
+    // Delete task
+    fun deleteTask(position: Int){
+        val task = taskList[position]
+        dbHelper.deleteTask(task.id) // remove from DB
+        taskList.removeAt(position)
+        notifyItemRemoved(position)
+    }
 
     // Converts Integers to Boolean values
     private fun toBoolean(n: Int): Boolean {
@@ -101,13 +117,4 @@ class TaskAdapter(
 //
 //    val fragment = AddNewTask.Companion.newInstance(item.id, item.task)
 //    fragment.show(activity.supportFragmentManager, AddNewTask.Companion.TAG)
-//}
-//
-//// Delete task
-//fun deleteItem(position: Int){
-//    val item = todoList[position]
-//    dbHelper.deleteTask(item.id)
-//    todoList.removeAt(position)
-//    notifyItemRemoved(position)
-//
 //}
