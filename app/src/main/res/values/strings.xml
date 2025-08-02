@@ -21,4 +21,7 @@
         <item>#FFFFFF</item> <!-- White -->
     </string-array>
 
+    <string name="switch_to_light_mode">Switch to Light Mode</string>
+    <string name="switch_to_dark_mode">Switch to Dark Mode</string>
+
 </resources>
