@@ -1,5 +1,6 @@
 package com.mobdeve.s18.task4today
 
+import HeaderItemTouchHelper
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 import com.mobdeve.s18.task4today.TaskHeader_ColorOption.TaskHeaderColorOption
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,25 +26,27 @@ class HeaderGroupsList : AppCompatActivity() {
     private lateinit var colorSpinner: Spinner
     private lateinit var confirmButton: Button
     private lateinit var cancelButton: Button
-    private lateinit var completeTaskHeaderList: RecyclerView
+    private lateinit var headerRecyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.header_task_groups_list)
 
         // Initialize views
-        completeTaskHeaderList = findViewById(R.id.completeTaskHeaderList)
-        completeTaskHeaderList.layoutManager = LinearLayoutManager(this)
+        headerRecyclerView = findViewById(R.id.completeTaskHeaderList)
+        headerRecyclerView.layoutManager = LinearLayoutManager(this)
 
         dbHelper = DbHelper(this)
         val headerList = dbHelper.getAllHeaders()
 
-        val adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
-            override fun onAddTaskClicked(header: HeaderModel) {
-                // Logic for task addition can go here
-            }
+        val headerListAdapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
+            override fun onAddTaskClicked(header: HeaderModel) {}
         })
-        completeTaskHeaderList.adapter = adapter
+        headerRecyclerView.adapter = headerListAdapter
+
+        // Set up helper for swiping headers
+        val itemTouchHelper = ItemTouchHelper(HeaderItemTouchHelper(headerListAdapter))
+        itemTouchHelper.attachToRecyclerView(headerRecyclerView)
 
         // Find UI components
         addBtn = findViewById(R.id.addBtn)
@@ -102,7 +106,7 @@ class HeaderGroupsList : AppCompatActivity() {
 
                 // Refresh the list
                 val updatedHeaders = dbHelper.getAllHeaders()
-                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
+                headerRecyclerView.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
                     override fun onAddTaskClicked(header: HeaderModel) {}
                 })
 

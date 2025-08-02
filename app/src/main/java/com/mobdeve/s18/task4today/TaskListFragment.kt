@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
@@ -23,7 +24,6 @@ class TaskListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var headerRecyclerView: RecyclerView
-    private lateinit var taskRecyclerView: RecyclerView
     private lateinit var headerListAdapter: HeaderListAdapter
 
     private lateinit var dbHelper: DbHelper

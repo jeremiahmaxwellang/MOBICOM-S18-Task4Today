@@ -18,11 +18,12 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.DbHelper
 import TaskItemTouchHelper
+import android.util.Log
 
 // HeaderListAdapter.kt
 // Adapter for the Parent Recycler View for Header
 class HeaderListAdapter(
-    private val headers: List<HeaderModel>,
+    private val headers: ArrayList<HeaderModel>,
     private val layoutResId: Int, // Parameter to allow dynamic layout
     private var dbHelper : DbHelper,
     private val listener: OnHeaderActionListener // REQUIRED ADD BTN Action listener
@@ -48,6 +49,16 @@ class HeaderListAdapter(
     // Getter of Child Task RecyclerView
     fun getTaskRecyclerViewAt(position: Int): RecyclerView? {
         return viewHolderMap[position]?.taskRecyclerView // get from HeaderViewHolder
+    }
+
+    // Getter for HeaderListAdapter's context (current activity)
+    fun getContext() : Context {
+        return this.context
+    }
+
+    // Getter for header arrayList
+    fun getHeaders() : ArrayList<HeaderModel> {
+        return this.headers
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
@@ -121,6 +132,24 @@ class HeaderListAdapter(
             }
             notifyItemChanged(position)
         }
+    }
+
+    // Delete Task Group Headers
+    fun deleteTaskGroup(position: Int) {
+        // Check if position is valid (within bounds)
+        if (position >= 0 && position < headers.size) {
+            val header = headers[position]
+            dbHelper.deleteHeader(header.id) // remove from DB
+            headers.removeAt(position)
+            notifyItemRemoved(position)
+        } else {
+            Log.e("HeaderListAdapter", "Invalid position: $position. Header list size is ${headers.size}")
+        }
+    }
+
+    // Function to refresh the layout manually
+    fun refreshLayout() {
+        notifyDataSetChanged() // Refresh the entire RecyclerView layout
     }
 }
 
