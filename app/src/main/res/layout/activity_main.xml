@@ -33,10 +33,11 @@
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="85dp"
         android:layout_margin="5dp"
-        android:outlineProvider="none"
+        android:outlineProvider="background"
+        android:paddingTop="10dp"
         app:itemIconTint="@color/nav_item_color"
         app:itemTextColor="@color/nav_item_color"
         app:menu="@menu/bottom_nav_menu" />
