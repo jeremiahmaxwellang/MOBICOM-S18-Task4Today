@@ -2,6 +2,7 @@ package com.mobdeve.s18.task4today.adapter
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +25,17 @@ class TaskAdapter(
         val taskCheckBox = itemView.findViewById<CheckBox>(R.id.taskCheckBox)
         val taskName = itemView.findViewById<TextView>(R.id.taskName)
         val taskTime = itemView.findViewById<TextView>(R.id.taskTime)
+    }
+
+    // Getter for taskList
+    fun getTaskList(): ArrayList<TaskModel> {
+        return taskList
+    }
+
+    // Setter for taskList
+    fun setTaskList(newTaskList: ArrayList<TaskModel>) {
+        this.taskList = newTaskList
+        notifyDataSetChanged()  // Refresh the RecyclerView if needed
     }
 
     // Getter for TaskAdapter's context (current activity)
@@ -75,8 +87,10 @@ class TaskAdapter(
     }
 
     // Set tasks on the screen
-    fun setTasks(taskList: ArrayList<TaskModel>){
+    fun setTasks(taskList: ArrayList<TaskModel>) {
         this.taskList = taskList
+
+        // Refresh layout after setting new tasks
         notifyDataSetChanged()
     }
 
@@ -88,22 +102,30 @@ class TaskAdapter(
             putString("task", task.task) // Edit text inside task
         }
 
-//        dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
-
-        setTasks(taskList) // refresh displayed taskList
+        setTasks(taskList) // Refresh displayed taskList
     }
 
     // Delete task
-    fun deleteTask(position: Int){
-        val task = taskList[position]
-        dbHelper.deleteTask(task.id) // remove from DB
-        taskList.removeAt(position)
-        notifyItemRemoved(position)
+    fun deleteTask(position: Int) {
+        // Check if position is valid (within bounds)
+        if (position >= 0 && position < taskList.size) {
+            val task = taskList[position]
+            dbHelper.deleteTask(task.id) // remove from DB
+            taskList.removeAt(position)
+            notifyItemRemoved(position)
+        } else {
+            Log.e("TaskAdapter", "Invalid position: $position. Task list size is ${taskList.size}")
+        }
     }
 
     // Converts Integers to Boolean values
     private fun toBoolean(n: Int): Boolean {
         return n != 0
+    }
+
+    // Function to refresh the layout manually
+    fun refreshLayout() {
+        notifyDataSetChanged() // Refresh the entire RecyclerView layout
     }
 }
 

@@ -1,6 +1,7 @@
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -27,21 +28,24 @@ class TaskItemTouchHelper(
         val context = taskAdapter.getContext()
         val position = viewHolder.bindingAdapterPosition
 
-        // Swipe LEFT to Delete
-        if (direction == ItemTouchHelper.LEFT) {
+// Ensure position is valid before proceeding with deletion
+        if (position != RecyclerView.NO_POSITION && position < taskAdapter.getTaskList().size) {
             AlertDialog.Builder(context)
                 .setTitle("Delete Task")
                 .setMessage("Proceed with task deletion?")
                 .setPositiveButton("CONFIRM") { dialog, _ ->
-                    taskAdapter.notifyItemChanged(position) // reset swipe
+                    taskAdapter.notifyItemChanged(position) // Reset swipe
                     dialog.dismiss()
 
-                    // Delete Task from DB
+                    // Proceed with task deletion
                     taskAdapter.deleteTask(position)
+
+                    // Refresh the layout after deleting the task
+                    taskAdapter.refreshLayout() // This will trigger a layout refresh
                 }
                 .show()
         } else {
-//            adapter.editTask(position)
+            Log.e("TaskItemTouchHelper", "Invalid position during swipe: $position")
         }
     }
 
