@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="overlayBackgroundColor" format="color" />
-    <attr name="overlayCardColor" format="color" />
-    <attr name="overlayCardStroke" format="color" />
+    <declare-styleable name="CustomTheme">
+        <attr name="checkboxTint" format="reference" />
+    </declare-styleable>
 </resources>

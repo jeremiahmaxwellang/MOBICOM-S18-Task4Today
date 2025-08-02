@@ -25,12 +25,12 @@
     <color name="checkbox_tint_dark">#00C853</color> <!-- Green in dark mode -->
 
     <!-- Background and Text -->
-    <color name="overlay_background">#FFFFFF</color>
-    <color name="text_primary">#000000</color>
+    <color name="overlay_background">#000000</color> <!-- Change to a darker background -->
+    <color name="text_primary">#FFFFFF</color> <!-- Light text color for dark mode -->
     <color name="text_secondary">#888888</color>
 
     <!-- Input Borders -->
-    <color name="input_border">#AAAAAA</color>
+    <color name="input_border">#202020</color> <!-- Darker border for dark mode -->
 
     <!-- Button Colors -->
     <color name="green_confirm">#00C853</color>

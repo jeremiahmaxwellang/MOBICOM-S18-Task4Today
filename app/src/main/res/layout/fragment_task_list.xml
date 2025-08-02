@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <!-- Date and Arrow Navigation -->
     <LinearLayout
+        android:id="@+id/dateNavLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -29,7 +29,10 @@
             android:src="@drawable/ic_arrow_left"
             android:background="@null"
             android:scaleType="centerInside"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            app:tint="?attr/colorControlNormal"
+            android:contentDescription="previous day"
+            />
 
         <ImageButton
             android:id="@+id/nextDayBtn"
@@ -38,14 +41,23 @@
             android:src="@drawable/ic_arrow_right"
             android:background="@null"
             android:scaleType="centerInside"
-            android:padding="8dp"/>
+            android:padding="8dp"
+            app:tint="?attr/colorControlNormal"
+            android:contentDescription="next day"
+            />
     </LinearLayout>
 
     <!-- Task List -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/taskRecyclerView"
+        android:id="@+id/headerRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_below="@id/dateNavLayout"
         android:layout_marginTop="16dp" />
-</LinearLayout>
+
+    <!-- "Add Task" Overlay -->
+    <include
+        android:id="@+id/overlayNewTask"
+        layout="@layout/overlay_new_task"
+        android:visibility="gone" />
+</RelativeLayout>

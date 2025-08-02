@@ -3,8 +3,8 @@ package com.mobdeve.s18.task4today
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.mobdeve.s18.task4today.databinding.ActivityMainBinding
 import androidx.appcompat.app.AppCompatDelegate
+import com.mobdeve.s18.task4today.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,13 +18,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Load default fragment
+        // Load default fragment (TaskListFragment with RecyclerView)
         replaceFragment(TaskListFragment())
 
-        // Set bottom nav listener
+        // Set up bottom navigation
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-            // Reset all icons to default
-            resetIcons()
+            resetIcons() // Reset to default icons first
 
             when (item.itemId) {
                 R.id.nav_tasks -> {
@@ -47,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 🔧 Applies the saved dark/light mode preference
+    // 🔁 Theme handling
     private fun applySavedTheme() {
         val sharedPrefs = getSharedPreferences("ThemePreferences", MODE_PRIVATE)
         val isDarkMode = sharedPrefs.getBoolean("DarkModeEnabled", false)
@@ -57,12 +56,14 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    // 🔄 Switch to the selected fragment
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
 
+    // 🎨 Reset all icons to default state
     private fun resetIcons() {
         binding.bottomNavigation.menu.findItem(R.id.nav_tasks).setIcon(R.drawable.ic_tasks)
         binding.bottomNavigation.menu.findItem(R.id.nav_calendar).setIcon(R.drawable.ic_calendar)

@@ -1,13 +1,22 @@
 package com.mobdeve.s18.task4today
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 import com.mobdeve.s18.task4today.TaskHeader_ColorOption.TaskHeaderColorOption
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
 
+//For format_view_header_list.xml
 class HeaderGroupsList : AppCompatActivity() {
 
+    private lateinit var dbHelper : DbHelper
     private lateinit var addBtn: ImageButton
     private lateinit var backBtn: ImageButton
     private lateinit var overlayAddHeader: View
@@ -15,16 +24,31 @@ class HeaderGroupsList : AppCompatActivity() {
     private lateinit var colorSpinner: Spinner
     private lateinit var confirmButton: Button
     private lateinit var cancelButton: Button
+    private lateinit var completeTaskHeaderList: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.header_task_groups_list)
 
+        // Initialize views
+        completeTaskHeaderList = findViewById(R.id.completeTaskHeaderList)
+        completeTaskHeaderList.layoutManager = LinearLayoutManager(this)
+
+        dbHelper = DbHelper(this)
+        val headerList = dbHelper.getAllHeaders()
+
+        val adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
+            override fun onAddTaskClicked(header: HeaderModel) {
+                // Logic for task addition can go here
+            }
+        })
+        completeTaskHeaderList.adapter = adapter
+
         // Find UI components
         addBtn = findViewById(R.id.addBtn)
         backBtn = findViewById(R.id.backBtn)
         overlayAddHeader = findViewById(R.id.overlayAddHeader)
-        taskNameInput = overlayAddHeader.findViewById(R.id.taskNameInput)
+        taskNameInput = overlayAddHeader.findViewById(R.id.taskInput)
         colorSpinner = overlayAddHeader.findViewById(R.id.colorSpinner)
         confirmButton = overlayAddHeader.findViewById(R.id.confirmButton)
         cancelButton = overlayAddHeader.findViewById(R.id.cancelButton)
@@ -54,10 +78,34 @@ class HeaderGroupsList : AppCompatActivity() {
             val selectedColorOption = colorSpinner.selectedItem as TaskHeaderColorOption
 
             if (headerTitle.isNotEmpty()) {
-                val dbHelper = TaskDatabaseHelper(this)
-                dbHelper.insertHeader(headerTitle, selectedColorOption.hex)
-
+                val header = HeaderModel(
+                    id = 0,
+                    title = headerTitle,
+                    color = selectedColorOption.hex,
+                    taskList = arrayListOf()
+                )
+                dbHelper.insertHeaders(header)
                 Toast.makeText(this, "Task header added", Toast.LENGTH_SHORT).show()
+
+                // Dynamically change the background color of the layout using headerLayout
+                val headerLayout = findViewById<LinearLayout>(R.id.headerLayout)
+
+                // Ensure the headerLayout is not null before trying to set the background
+                if (headerLayout != null) {
+                    val color = Color.parseColor(selectedColorOption.hex)  // Parse the selected color
+
+                    // Apply the dynamic color to headerLayout using ColorDrawable
+                    headerLayout.setBackground(ColorDrawable(color))  // Set the background dynamically with ColorDrawable
+                } else {
+                    Log.e("HeaderGroupsList", "headerLayout not found.")
+                }
+
+                // Refresh the list
+                val updatedHeaders = dbHelper.getAllHeaders()
+                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
+                    override fun onAddTaskClicked(header: HeaderModel) {}
+                })
+
                 overlayAddHeader.visibility = View.GONE
                 taskNameInput.text.clear()
             } else {
@@ -67,7 +115,7 @@ class HeaderGroupsList : AppCompatActivity() {
 
         // Handle back button click
         backBtn.setOnClickListener {
-            finish() // Return to SettingsFragment
+            finish() // Return to previous screen
         }
     }
 }
