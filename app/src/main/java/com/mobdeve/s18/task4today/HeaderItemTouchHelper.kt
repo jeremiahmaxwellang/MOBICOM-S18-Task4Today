@@ -1,12 +1,12 @@
+package com.mobdeve.s18.task4today
+
 import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.mobdeve.s18.task4today.R
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 
 /*
@@ -74,20 +74,11 @@ class HeaderItemTouchHelper(
 
         val itemView = viewHolder.itemView
         val backgroundCornerOffset = 20
+        val background = GradientDrawable()
 
-        val icon: Drawable?
-        val background: GradientDrawable = GradientDrawable()
-
-        // EDIT COLOR: Green if SWIPE RIGHT
-//        if (dX > 0) {
-//            icon = ContextCompat.getDrawable(headerAdapter.getContext(), R.drawable.edit)
-//            background.setColor(ContextCompat.getColor(headerAdapter.getContext(), R.color.green_confirm))
-//        }
-        // DELETE COLOR: Red if SWIPE LEFT
-//        else {
-            icon = ContextCompat.getDrawable(headerAdapter.getContext(), R.drawable.delete)
+        val icon = ContextCompat.getDrawable(headerAdapter.getContext(), R.drawable.delete)
             background.setColor(ContextCompat.getColor(headerAdapter.getContext(), R.color.red_cancel))
-//        }
+       
 
         // Set the corner radius for all edges
         background.cornerRadius = 30f  // Apply uniform rounded corners

@@ -87,7 +87,7 @@ class HeaderListAdapter(
                 // Get the color from the model
                 val color = Color.parseColor(header.color)
                 // Create a ColorDrawable with the color
-                val colorDrawable = ColorDrawable(color)
+                ColorDrawable(color)
 
                 // Apply the rounded corners and dynamic color
                 val background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.header_background)
@@ -99,7 +99,7 @@ class HeaderListAdapter(
                     headerLayout.background = wrapped  // Set the new background with both color and corners
                 }
 
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 // Fallback to default color if invalid color format
                 val fallbackBackground = ContextCompat.getDrawable(holder.itemView.context, R.drawable.header_background)
                 headerLayout.background = fallbackBackground  // Use default background with rounded corners

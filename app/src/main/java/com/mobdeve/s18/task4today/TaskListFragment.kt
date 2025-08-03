@@ -56,7 +56,7 @@ class TaskListFragment : Fragment(), EditTask.DialogCloseListener {
 
         // Fetch headers from database
         dbHelper = DbHelper(requireContext())
-        var headerList = dbHelper.getAllHeaders(currentDate)
+        val headerList = dbHelper.getAllHeaders(currentDate)
 
         // Set up adapter
         headerListAdapter = HeaderListAdapter(headerList, R.layout.format_task_list_header, dbHelper, requireActivity(), this,
@@ -70,24 +70,24 @@ class TaskListFragment : Fragment(), EditTask.DialogCloseListener {
 
         // Set dateLabel to date today
         val dateLabel = _binding?.dateLabel
-        dateLabel?.setText(currentDate)
+        dateLabel?.text = currentDate
 
         // Previous Day Button
-        _binding?.prevDayBtn?.setOnClickListener({
+        _binding?.prevDayBtn?.setOnClickListener {
             val prevDate = getPreviousDate(currentDate)
             // Updates the date label
             updateDateLabel(prevDate)
 
             updateHeaderAdapter(prevDate)
-        })
+        }
 
         // Next Day Button
-        _binding?.nextDayBtn?.setOnClickListener({
+        _binding?.nextDayBtn?.setOnClickListener {
             val nextDate = getNextDate(currentDate)
             updateDateLabel(nextDate)
 
             updateHeaderAdapter(nextDate)
-        })
+        }
     }
 
     // Function for getting the date yesterday

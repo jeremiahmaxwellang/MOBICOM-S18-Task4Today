@@ -36,18 +36,12 @@ class TaskAdapter(
         return taskList
     }
 
-    // Setter for taskList
-    fun setTaskList(newTaskList: ArrayList<TaskModel>) {
-        this.taskList = newTaskList
-        notifyDataSetChanged()  // Refresh the RecyclerView if needed
-    }
-
     // Getter for TaskAdapter's context
     fun getContext() : Context {
         return this.context
     }
 
-    override fun onCreateViewHolder(header: ViewGroup, ViewType: Int) : TaskViewHolder {
+    override fun onCreateViewHolder(header: ViewGroup, viewType: Int) : TaskViewHolder {
         // Inflate task layout
         val view = LayoutInflater.from(header.context).inflate(R.layout.format_task_layout, header, false)
         return TaskViewHolder(view)
@@ -101,7 +95,7 @@ class TaskAdapter(
     // Edit Tasks (Swipe Right)
      fun editTask(position: Int){
         val task = taskList[position]
-        val bundle = Bundle().apply{
+        Bundle().apply{
             putInt("id", task.id)
             putString("task", task.task) // Edit text inside task
         }

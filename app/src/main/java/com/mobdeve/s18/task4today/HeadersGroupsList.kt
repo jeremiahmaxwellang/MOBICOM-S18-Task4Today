@@ -1,6 +1,5 @@
 package com.mobdeve.s18.task4today
 
-import HeaderItemTouchHelper
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -13,7 +12,6 @@ import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 import com.mobdeve.s18.task4today.TaskHeader_ColorOption.TaskHeaderColorOption
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -101,7 +99,7 @@ class HeaderGroupsList : AppCompatActivity() {
                     val color = Color.parseColor(selectedColorOption.hex)  // Parse the selected color
 
                     // Apply the dynamic color to headerLayout using ColorDrawable
-                    headerLayout.setBackground(ColorDrawable(color))  // Set the background dynamically with ColorDrawable
+                    headerLayout.background = ColorDrawable(color)  // Set the background dynamically with ColorDrawable
                 } else {
                     Log.e("HeaderGroupsList", "headerLayout not found.")
                 }

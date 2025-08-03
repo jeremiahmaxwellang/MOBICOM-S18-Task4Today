@@ -4,7 +4,7 @@ class HeaderModel(
     id: Int,
     title: String,
     color: String,
-    taskList: ArrayList<TaskModel> // list of tasks under this header
+    var taskList: ArrayList<TaskModel>
 ) {
 
 // Getters and Setters
@@ -17,10 +17,5 @@ class HeaderModel(
 
     var color : String = color
         private set
-
-    var taskList : ArrayList<TaskModel> = taskList
-
-    // Constructor without ID
-    constructor(title: String, color: String, taskList : ArrayList<TaskModel>) : this(0, title, color, taskList)
 
 }

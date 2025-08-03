@@ -16,10 +16,6 @@ class EditTask : DialogFragment() {
     companion object {
         const val TAG = "ActionBottomDialog"
 
-        fun newInstance(): EditTask {
-            return EditTask()
-        }
-
         fun newInstance(id: Int, task: String): EditTask {
             val fragment = EditTask()
             fragment.arguments = Bundle().apply {
@@ -66,7 +62,7 @@ class EditTask : DialogFragment() {
 
         // Set Overlay Design
         overlayTitle.visibility = View.GONE
-        newTaskTitle.setText("Edit Task")
+        newTaskTitle.text = "Edit Task"
         timeButton.visibility = View.GONE // hiding time button
 
         dbHelper = DbHelper(requireContext())

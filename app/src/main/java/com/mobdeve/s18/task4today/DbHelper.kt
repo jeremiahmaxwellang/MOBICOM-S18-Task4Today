@@ -40,7 +40,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
             );
         """.trimIndent()
 
-        val DROP_HEADERS_TABLE = "DROP TABLE " + HEADERS_TABLE
+        const val DROP_HEADERS_TABLE = "DROP TABLE $HEADERS_TABLE"
 
         // Tasks Table SQL Statements
         val CREATE_TASKS_TABLE = """
@@ -55,14 +55,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
             );
         """.trimIndent()
 
-        val DROP_TASKS_TABLE = "DROP TABLE " + TASKS_TABLE
-
-        // Insert Sample Task Header
-        val INSERT_MY_HEADER = """
-            INSERT INTO $HEADERS_TABLE ($HEADER_TITLE, $HEADER_COLOR)
-            VALUES("My Task Group", "FF6961")
-        """.trimIndent()
-
+        const val DROP_TASKS_TABLE = "DROP TABLE $TASKS_TABLE"
     }
 
     private lateinit var sqliteDatabase : SQLiteDatabase
@@ -190,7 +183,7 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     fun updateStatus(id : Int, status : Int){
         sqliteDatabase = writableDatabase
 
-        var cv = ContentValues()
+        val cv = ContentValues()
         cv.put(DbReferences.STATUS, status)
         sqliteDatabase.update(
             DbReferences.TASKS_TABLE,
@@ -204,36 +197,8 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
     fun updateTask(id : Int, task : String){
         sqliteDatabase = writableDatabase
 
-        var cv = ContentValues()
+        val cv = ContentValues()
         cv.put(DbReferences.TASK, task)
-        sqliteDatabase.update(
-            DbReferences.TASKS_TABLE,
-            cv,
-            DbReferences.TASK_ID + "=?",
-            arrayOf(id.toString())
-        )
-    }
-
-    // Update task date
-    fun updateDate(id : Int, time : String){
-        sqliteDatabase = writableDatabase
-
-        var cv = ContentValues()
-        cv.put(DbReferences.TIME, time)
-        sqliteDatabase.update(
-            DbReferences.TASKS_TABLE,
-            cv,
-            DbReferences.TASK_ID + "=?",
-            arrayOf(id.toString())
-        )
-    }
-
-//    Update task time to be accomplished
-    fun updateTime(id : Int, time : String){
-        sqliteDatabase = writableDatabase
-
-        var cv = ContentValues()
-        cv.put(DbReferences.TIME, time)
         sqliteDatabase.update(
             DbReferences.TASKS_TABLE,
             cv,
@@ -248,34 +213,6 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
         sqliteDatabase.delete(
             DbReferences.TASKS_TABLE,
             DbReferences.TASK_ID + "=?",
-            arrayOf(id.toString())
-        )
-    }
-
-    // Update Header TITLE
-    fun updateHeaderTitle(id : Int, title : String){
-        sqliteDatabase = writableDatabase
-
-        var cv = ContentValues()
-        cv.put(DbReferences.HEADER_TITLE, title)
-        sqliteDatabase.update(
-            DbReferences.HEADERS_TABLE,
-            cv,
-            DbReferences.HEADER_ID + "=?",
-            arrayOf(id.toString())
-        )
-    }
-
-    // Update Header COLOR
-    fun updateHeaderColor(id : Int, color : String){
-        sqliteDatabase = writableDatabase
-
-        var cv = ContentValues()
-        cv.put(DbReferences.HEADER_COLOR, color)
-        sqliteDatabase.update(
-            DbReferences.HEADERS_TABLE,
-            cv,
-            DbReferences.HEADER_ID + "=?",
             arrayOf(id.toString())
         )
     }
