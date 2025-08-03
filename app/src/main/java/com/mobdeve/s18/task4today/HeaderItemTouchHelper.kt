@@ -78,7 +78,7 @@ class HeaderItemTouchHelper(
 
         val icon = ContextCompat.getDrawable(headerAdapter.getContext(), R.drawable.delete)
             background.setColor(ContextCompat.getColor(headerAdapter.getContext(), R.color.red_cancel))
-       
+
 
         // Set the corner radius for all edges
         background.cornerRadius = 30f  // Apply uniform rounded corners

@@ -88,7 +88,7 @@ class TaskItemTouchHelper(
         val backgroundCornerOffset = 20
 
         val icon: Drawable?
-        val background: GradientDrawable = GradientDrawable()
+        val background = GradientDrawable()
 
         // EDIT COLOR: Green if SWIPE RIGHT
         if (dX > 0) {
