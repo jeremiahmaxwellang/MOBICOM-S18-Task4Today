@@ -1,4 +1,10 @@
 package com.mobdeve.s18.task4today.adapter
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -14,16 +20,23 @@ import android.widget.LinearLayout
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.DbHelper
+import com.mobdeve.s18.task4today.TaskItemTouchHelper
+import android.util.Log
+import androidx.fragment.app.FragmentActivity
+import com.mobdeve.s18.task4today.EditTask
 
 // HeaderListAdapter.kt
-// Adapter for the Parent Recycler View for Header
+// Adapter for the Header Parent Recycler View
 class HeaderListAdapter(
-    private val headers: List<HeaderModel>,
+    private val headers: ArrayList<HeaderModel>,
     private val layoutResId: Int, // Parameter to allow dynamic layout
     private var dbHelper : DbHelper,
-    private val listener: OnHeaderActionListener // REQUIRED ADD BTN Action listener
+    private val activity: FragmentActivity,
+    private var dialogCloseListener: EditTask.DialogCloseListener?,
+    private val listener: OnHeaderActionListener? = null // REQUIRED ADD BTN Action listener
 ) : RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
 
     private lateinit var context: Context
@@ -38,14 +51,19 @@ class HeaderListAdapter(
         fun bind(header: HeaderModel) {
             titleText.text = header.title
             addButton?.setOnClickListener {
-                listener.onAddTaskClicked(header)
+                listener?.onAddTaskClicked(header)
             }
         }
     }
 
-    // Getter of Child Task RecyclerView
-    fun getTaskRecyclerViewAt(position: Int): RecyclerView? {
-        return viewHolderMap[position]?.taskRecyclerView // get from HeaderViewHolder
+    // Getter for HeaderListAdapter's context (current activity)
+    fun getContext() : Context {
+        return this.context
+    }
+
+    // Getter for header arrayList
+    fun getHeaders() : ArrayList<HeaderModel> {
+        return this.headers
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HeaderViewHolder {
@@ -69,7 +87,7 @@ class HeaderListAdapter(
                 // Get the color from the model
                 val color = Color.parseColor(header.color)
                 // Create a ColorDrawable with the color
-                val colorDrawable = ColorDrawable(color)
+                ColorDrawable(color)
 
                 // Apply the rounded corners and dynamic color
                 val background = ContextCompat.getDrawable(holder.itemView.context, R.drawable.header_background)
@@ -81,7 +99,7 @@ class HeaderListAdapter(
                     headerLayout.background = wrapped  // Set the new background with both color and corners
                 }
 
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
                 // Fallback to default color if invalid color format
                 val fallbackBackground = ContextCompat.getDrawable(holder.itemView.context, R.drawable.header_background)
                 headerLayout.background = fallbackBackground  // Use default background with rounded corners
@@ -92,26 +110,57 @@ class HeaderListAdapter(
         holder.taskRecyclerView?.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(holder.itemView.context)
-            adapter = TaskAdapter(header.taskList, dbHelper, this.context).also { taskAdapter ->
-                taskAdapterMap[position] = taskAdapter // store all the taskAdapters of each header's taskRecyclerView
-            }
+
+            val taskAdapter = TaskAdapter(header.taskList, dbHelper, this.context, activity, dialogCloseListener)
+            adapter = taskAdapter // set adapter of taskRecyclerView
+            taskAdapterMap[position] = taskAdapter // store all the taskAdapters of each header's taskRecyclerView
+
+
+            // Set up helper for swiping tasks
+            val itemTouchHelper = ItemTouchHelper(TaskItemTouchHelper(taskAdapter))
+            itemTouchHelper.attachToRecyclerView(this)
         }
     }
 
     override fun getItemCount(): Int = headers.size
 
     // Refresh this header's tasks after Add/Update
-    fun refreshTasksForHeader(headerId: Int) {
+    fun refreshTasksForHeader(headerId: Int, currentDate: String) {
         val position = headers.indexOfFirst { it.id == headerId }
         if (position != -1) {
-            val updatedTasks = dbHelper.getAllTasks().filter { it.header_id == headerId } // get tasks from DB
+            // Get tasks for the specified header and current date
+            val updatedTasks = dbHelper.getAllTasks(currentDate).filter { it.header_id == headerId }
+
+            // Update the task list for the header
             headers[position].taskList = ArrayList(updatedTasks)
 
+            // Store all taskAdapters of every header
             taskAdapterMap[position]?.let { adapter ->
                 adapter.setTasks(ArrayList(updatedTasks))
+                notifyItemChanged(position)
             }
+
+            // Ensure the item view is updated
             notifyItemChanged(position)
         }
+    }
+
+    // Delete Task Group Headers
+    fun deleteTaskGroup(position: Int) {
+        // Check if position is valid (within bounds)
+        if (position >= 0 && position < headers.size) {
+            val header = headers[position]
+            dbHelper.deleteHeader(header.id) // remove from DB
+            headers.removeAt(position)
+            notifyItemRemoved(position)
+        } else {
+            Log.e("HeaderListAdapter", "Invalid position: $position. Header list size is ${headers.size}")
+        }
+    }
+
+    // Function to refresh the layout manually
+    fun refreshLayout() {
+        notifyDataSetChanged() // Refresh the entire RecyclerView layout
     }
 }
 

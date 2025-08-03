@@ -12,6 +12,12 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <!-- ViewPager2 for fragment switching -->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <!-- FrameLayout for fragment switching -->
         <FrameLayout
             android:id="@+id/fragment_container"
@@ -33,10 +39,11 @@
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
+        android:layout_width="400dp"
         android:layout_height="85dp"
         android:layout_margin="5dp"
-        android:outlineProvider="none"
+        android:outlineProvider="background"
+        android:paddingTop="10dp"
         app:itemIconTint="@color/nav_item_color"
         app:itemTextColor="@color/nav_item_color"
         app:menu="@menu/bottom_nav_menu" />

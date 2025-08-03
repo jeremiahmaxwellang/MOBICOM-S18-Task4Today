@@ -1,4 +1,10 @@
 package com.mobdeve.s18.task4today
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.content.Context
 import android.content.Intent
@@ -10,6 +16,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.mobdeve.s18.task4today.databinding.FragmentSettingsBinding
 
+// Settings Page
 class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null

@@ -1,4 +1,10 @@
 package com.mobdeve.s18.task4today
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -7,13 +13,17 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 import com.mobdeve.s18.task4today.TaskHeader_ColorOption.TaskHeaderColorOption
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mobdeve.s18.task4today.adapter.OnHeaderActionListener
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-//For format_view_header_list.xml
+// Handles "Headers" Page of the Settings Fragment
+// Layout used: format_view_header_list.xml
 class HeaderGroupsList : AppCompatActivity() {
 
     private lateinit var dbHelper : DbHelper
@@ -24,25 +34,26 @@ class HeaderGroupsList : AppCompatActivity() {
     private lateinit var colorSpinner: Spinner
     private lateinit var confirmButton: Button
     private lateinit var cancelButton: Button
-    private lateinit var completeTaskHeaderList: RecyclerView
+    private lateinit var headerRecyclerView: RecyclerView
+    var currentDate: String = SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(Date())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.header_task_groups_list)
 
         // Initialize views
-        completeTaskHeaderList = findViewById(R.id.completeTaskHeaderList)
-        completeTaskHeaderList.layoutManager = LinearLayoutManager(this)
+        headerRecyclerView = findViewById(R.id.completeTaskHeaderList)
+        headerRecyclerView.layoutManager = LinearLayoutManager(this)
 
         dbHelper = DbHelper(this)
-        val headerList = dbHelper.getAllHeaders()
+        val headerList = dbHelper.getAllHeaders(currentDate)
 
-        val adapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
-            override fun onAddTaskClicked(header: HeaderModel) {
-                // Logic for task addition can go here
-            }
-        })
-        completeTaskHeaderList.adapter = adapter
+        val headerListAdapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, this, null, null)
+        headerRecyclerView.adapter = headerListAdapter
+
+        // Set up helper for swiping headers
+        val itemTouchHelper = ItemTouchHelper(HeaderItemTouchHelper(headerListAdapter))
+        itemTouchHelper.attachToRecyclerView(headerRecyclerView)
 
         // Find UI components
         addBtn = findViewById(R.id.addBtn)
@@ -95,16 +106,14 @@ class HeaderGroupsList : AppCompatActivity() {
                     val color = Color.parseColor(selectedColorOption.hex)  // Parse the selected color
 
                     // Apply the dynamic color to headerLayout using ColorDrawable
-                    headerLayout.setBackground(ColorDrawable(color))  // Set the background dynamically with ColorDrawable
+                    headerLayout.background = ColorDrawable(color)  // Set the background dynamically with ColorDrawable
                 } else {
                     Log.e("HeaderGroupsList", "headerLayout not found.")
                 }
 
                 // Refresh the list
-                val updatedHeaders = dbHelper.getAllHeaders()
-                completeTaskHeaderList.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, object : OnHeaderActionListener {
-                    override fun onAddTaskClicked(header: HeaderModel) {}
-                })
+                val updatedHeaders = dbHelper.getAllHeaders(currentDate)
+                headerRecyclerView.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, this, null)
 
                 overlayAddHeader.visibility = View.GONE
                 taskNameInput.text.clear()

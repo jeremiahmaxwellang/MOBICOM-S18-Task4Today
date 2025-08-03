@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="Theme.Task4Today" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Main Colors -->
@@ -11,7 +11,7 @@
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/purple_700</item>
+        <item name="android:statusBarColor" >@color/purple_700</item>
 
         <!-- Set checkbox tint dynamically based on the theme -->
         <item name="checkboxTint">@color/checkbox_tint_light</item>

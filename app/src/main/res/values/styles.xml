@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Spinner-style TimePickerDialog -->
+    <style name="TimePickerDialogSpinner" parent="@android:style/Theme.Holo.Light.Dialog">
+        <item name="android:timePickerMode">spinner</item>
+    </style>
+
+</resources>

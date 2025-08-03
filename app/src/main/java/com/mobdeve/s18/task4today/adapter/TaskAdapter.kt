@@ -1,22 +1,34 @@
 package com.mobdeve.s18.task4today.adapter
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.DbHelper
+import com.mobdeve.s18.task4today.EditTask
 import com.mobdeve.s18.task4today.R
 import com.mobdeve.s18.task4today.TaskModel
 
+// TaskAdapter - Adapter for the Child Tasks RecyclerView
 class TaskAdapter(
     private var taskList: ArrayList<TaskModel>,
     private var dbHelper : DbHelper,
-    private var context: Context
+    private var context: Context,
+    private var activity: FragmentActivity,
+    private var dialogCloseListener: EditTask.DialogCloseListener?
 ): RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     inner class TaskViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -26,12 +38,17 @@ class TaskAdapter(
         val taskTime = itemView.findViewById<TextView>(R.id.taskTime)
     }
 
-    // Getter for TaskAdapter's context (current activity)
+    // Getter for taskList
+    fun getTaskList(): ArrayList<TaskModel> {
+        return taskList
+    }
+
+    // Getter for TaskAdapter's context
     fun getContext() : Context {
         return this.context
     }
 
-    override fun onCreateViewHolder(header: ViewGroup, ViewType: Int) : TaskViewHolder {
+    override fun onCreateViewHolder(header: ViewGroup, viewType: Int) : TaskViewHolder {
         // Inflate task layout
         val view = LayoutInflater.from(header.context).inflate(R.layout.format_task_layout, header, false)
         return TaskViewHolder(view)
@@ -75,39 +92,48 @@ class TaskAdapter(
     }
 
     // Set tasks on the screen
-    fun setTasks(taskList: ArrayList<TaskModel>){
+    fun setTasks(taskList: ArrayList<TaskModel>) {
         this.taskList = taskList
+
+        // Refresh layout after setting new tasks
         notifyDataSetChanged()
     }
 
-    // TODO: editTask()
-    // dbHelper.updateTask(bundle?.getInt("id") ?: -1, text)
+    // Edit Tasks (Swipe Right)
+     fun editTask(position: Int){
+        val task = taskList[position]
+        Bundle().apply{
+            putInt("id", task.id)
+            putString("task", task.task) // Edit text inside task
+        }
 
-    // TODO: deleteTask()
+        // Open Edit Task Dialog
+        val editTaskDialog = EditTask.newInstance(task.id, task.task)
+        editTaskDialog.setDialogCloseListener(dialogCloseListener)
+        editTaskDialog.show(activity.supportFragmentManager, EditTask.TAG)
+
+    }
+
+    // Delete task
+    fun deleteTask(position: Int) {
+        // Check if position is valid (within bounds)
+        if (position >= 0 && position < taskList.size) {
+            val task = taskList[position]
+            dbHelper.deleteTask(task.id) // remove from DB
+            taskList.removeAt(position)
+            notifyItemRemoved(position)
+        } else {
+            Log.e("TaskAdapter", "Invalid position: $position. Task list size is ${taskList.size}")
+        }
+    }
 
     // Converts Integers to Boolean values
     private fun toBoolean(n: Int): Boolean {
         return n != 0
     }
-}
 
-// Sample code for editing / deleting tasks
-//fun editItem(position: Int){
-//    val item = todoList[position]
-//    val bundle = Bundle().apply{
-//        putInt("id", item.id)
-//        putString("task", item.task)
-//    }
-//
-//    val fragment = AddNewTask.Companion.newInstance(item.id, item.task)
-//    fragment.show(activity.supportFragmentManager, AddNewTask.Companion.TAG)
-//}
-//
-//// Delete task
-//fun deleteItem(position: Int){
-//    val item = todoList[position]
-//    dbHelper.deleteTask(item.id)
-//    todoList.removeAt(position)
-//    notifyItemRemoved(position)
-//
-//}
+    // Function to refresh the layout manually
+    fun refreshLayout() {
+        notifyDataSetChanged() // Refresh the entire RecyclerView layout
+    }
+}
