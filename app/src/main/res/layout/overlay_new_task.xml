@@ -25,7 +25,8 @@
             android:layout_height="wrap_content"
             android:text="Add Task"
             android:textSize="32sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#808080"/>
 
         <!-- Title -->
         <TextView
