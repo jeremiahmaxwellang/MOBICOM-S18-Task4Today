@@ -109,79 +109,80 @@ class DbHelper(context: Context) : SQLiteOpenHelper(
 
     // Fetch all tasks from the db
     // CHANGE: Called in getAllHeaders() to sort tasks by category (2025/7/27, 12:04AM)
-    fun getAllTasks() : ArrayList<TaskModel>{
+    // Fetch all tasks from the db for a specific date
+    fun getAllTasks(date: String) : ArrayList<TaskModel> {
         val taskList = ArrayList<TaskModel>()
 
         readableDatabase.use { db ->
             db.beginTransaction()
-            try{
+            try {
                 db.query(
                     DbReferences.TASKS_TABLE,
-                    null, null, null, null, null, null
+                    null, // All columns
+                    "${DbReferences.DATE} = ?", // WHERE clause
+                    arrayOf(date), // Date parameter
+                    null, null, null
                 ).use { cursor ->
-                        // While cursor is not null
-                        if (cursor.moveToFirst()) {
-                            do {
-                                val id = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.TASK_ID))
-                                val header_id = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.TASK_HEADER_ID))
-                                val taskItem = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.TASK))
-                                val status = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.STATUS))
-                                val date = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.DATE))
-                                val time = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.TIME))
+                    // While cursor is not null
+                    if (cursor.moveToFirst()) {
+                        do {
+                            val id = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.TASK_ID))
+                            val header_id = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.TASK_HEADER_ID))
+                            val taskItem = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.TASK))
+                            val status = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.STATUS))
+                            val time = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.TIME))
 
-                                val task = TaskModel(id, header_id, status, taskItem, date, time)
-                                taskList.add(task)
+                            val task = TaskModel(id, header_id, status, taskItem, date, time)
+                            taskList.add(task)
 
-                            } while (cursor.moveToNext())
-                        } // end of if statement
-                    } //end of .use { cursor ->
+                        } while (cursor.moveToNext())
+                    } // end of if statement
+                } // end of cursor use
 
                 db.setTransactionSuccessful()
-            } // end of try statement
-            finally{
+            } // end of try block
+            finally {
                 db.endTransaction()
             }
-        } //end of readableDatabase.use
+        }
 
         return taskList
-
     }
 
+
     // Fetch all Task Headers (Categories) from the db
-    fun getAllHeaders(currentDate: String) : ArrayList<HeaderModel>{
+    fun getAllHeaders(currentDate: String) : ArrayList<HeaderModel> {
         val headerList = ArrayList<HeaderModel>()
-        val allTasks = getAllTasks() // list of ALL tasks
+        val allTasks = getAllTasks(currentDate) // Get tasks for the specific date
 
         readableDatabase.use { db ->
             db.beginTransaction()
-            try{
+            try {
                 db.query(
                     DbReferences.HEADERS_TABLE,
                     null, null, null, null, null, null
                 ).use { cursor ->
-                    if(cursor.moveToFirst()){
+                    if (cursor.moveToFirst()) {
                         do {
                             val id = cursor.getInt(cursor.getColumnIndexOrThrow(DbReferences.HEADER_ID))
                             val title = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.HEADER_TITLE))
                             val color = cursor.getString(cursor.getColumnIndexOrThrow(DbReferences.HEADER_COLOR))
 
-                            // list of tasks TODAY under this header (category)
-                            val taskList = ArrayList(allTasks.filter{ it.header_id == id && it.date == currentDate})
+                            // Get only tasks with the correct header ID and current date
+                            val taskList = ArrayList(allTasks.filter { it.header_id == id })
 
                             val header = HeaderModel(id, title, color, taskList)
-
                             headerList.add(header)
 
                         } while (cursor.moveToNext())
-                    } // end of if statement
-                } //end of .use { cursor ->
+                    }
+                }
 
                 db.setTransactionSuccessful()
-            } // end of try statement
-            finally{
+            } finally {
                 db.endTransaction()
             }
-        } //end of readableDatabase.use
+        }
 
         return headerList
     }

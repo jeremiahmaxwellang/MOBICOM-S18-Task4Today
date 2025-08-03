@@ -115,10 +115,13 @@ class HeaderListAdapter(
     override fun getItemCount(): Int = headers.size
 
     // Refresh this header's tasks after Add/Update
-    fun refreshTasksForHeader(headerId: Int) {
+    fun refreshTasksForHeader(headerId: Int, currentDate: String) {
         val position = headers.indexOfFirst { it.id == headerId }
         if (position != -1) {
-            val updatedTasks = dbHelper.getAllTasks().filter { it.header_id == headerId } // get tasks from DB
+            // Get tasks for the specified header and current date
+            val updatedTasks = dbHelper.getAllTasks(currentDate).filter { it.header_id == headerId }
+
+            // Update the task list for the header
             headers[position].taskList = ArrayList(updatedTasks)
 
             // Store all taskAdapters of every header
@@ -126,6 +129,8 @@ class HeaderListAdapter(
                 adapter.setTasks(ArrayList(updatedTasks))
                 notifyItemChanged(position)
             }
+
+            // Ensure the item view is updated
             notifyItemChanged(position)
         }
     }

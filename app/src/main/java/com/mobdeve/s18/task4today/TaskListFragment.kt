@@ -3,6 +3,7 @@ package com.mobdeve.s18.task4today
 import android.app.TimePickerDialog
 import android.view.ContextThemeWrapper
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,31 +64,55 @@ class TaskListFragment : Fragment() {
         val dateLabel = _binding?.dateLabel
         dateLabel?.setText(currentDate)
 
-        // Change tasks on screen depending on the date
+        // Modify the updateHeaderAdapter function to remove tasks that don't match the current date
+        // Modify the updateHeaderAdapter function to remove tasks that don't match the current date
         fun updateHeaderAdapter(date: String) {
-            // Get new headers
-            headerList.clear()
-            headerList.addAll(dbHelper.getAllHeaders(date))
+            // Log the current date tasks being loaded
+            Log.d("TaskListFragment", "Loading tasks for date: $date")
 
-            // Create new adapter
+            // Get new headers for the selected date
+            val headerList = dbHelper.getAllHeaders(date)  // Fetch headers and tasks for the selected date
+
+            // Remove tasks that don't match the current date and convert it to ArrayList
+            headerList.forEach { header ->
+                header.taskList = ArrayList(header.taskList.filter { task -> task.date == date })
+            }
+
+            // Log the tasks loaded for the current date
+            headerList.forEach { header ->
+                header.taskList.forEach { task ->
+                    Log.d("TaskListFragment", "Loaded Task: ${task.task} | Assigned Time: ${task.time} | Date: ${task.date}")
+                }
+            }
+
+            // Create a new adapter with the updated list
             headerListAdapter = HeaderListAdapter(headerList, R.layout.format_task_list_header, dbHelper, object : OnHeaderActionListener {
                 override fun onAddTaskClicked(header: HeaderModel) {
                     setAddTaskListeners(header)
                 }
             })
 
-            // Refresh displayed tasks
-            for(header in headerList){
-                headerListAdapter.refreshTasksForHeader(header.id)
+            // Set the new adapter to the RecyclerView
+            binding.headerRecyclerView.adapter = headerListAdapter
+
+            // Log all tasks currently being displayed in the layout
+            Log.d("TaskListFragment", "Currently displayed tasks for date: $date")
+            headerList.forEach { header ->
+                header.taskList.forEach { task ->
+                    Log.d("TaskListFragment", "Displayed Task: ${task.task} | Assigned Time: ${task.time} | Date: ${task.date}")
+                }
             }
 
-            binding.headerRecyclerView.adapter = headerListAdapter // rebind adapter
-
+            // Refresh tasks for each header
+            headerList.forEach { header ->
+                headerListAdapter.refreshTasksForHeader(header.id, date) // Pass the current date
+            }
         }
 
         // Previous Day Button
         _binding?.prevDayBtn?.setOnClickListener({
             val prevDate = getPreviousDate(currentDate)
+            // Updates the date label
             updateDateLabel(prevDate)
 
             updateHeaderAdapter(prevDate)
@@ -177,7 +202,8 @@ class TaskListFragment : Fragment() {
             if (text.isNotEmpty()) {
                 val task = TaskModel(header.id, 0, text, currentDate, selectedTime)
                 dbHelper.insertTasks(task)
-                headerListAdapter.refreshTasksForHeader(header.id)
+                // Pass currentDate when refreshing tasks
+                headerListAdapter.refreshTasksForHeader(header.id, currentDate)
                 newTaskOverlay.visibility = View.GONE
             }
         }
