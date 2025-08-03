@@ -39,7 +39,7 @@
     <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
-        android:layout_width="wrap_content"
+        android:layout_width="400dp"
         android:layout_height="85dp"
         android:layout_margin="5dp"
         android:outlineProvider="background"
