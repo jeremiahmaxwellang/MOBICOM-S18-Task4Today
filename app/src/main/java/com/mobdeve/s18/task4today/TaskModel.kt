@@ -1,5 +1,12 @@
 package com.mobdeve.s18.task4today
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
+// Model for Tasks
 class TaskModel(
     id: Int,
     header_id: Int,

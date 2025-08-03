@@ -1,4 +1,10 @@
 package com.mobdeve.s18.task4today.adapter
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.content.Context
 import android.os.Bundle
@@ -16,6 +22,7 @@ import com.mobdeve.s18.task4today.EditTask
 import com.mobdeve.s18.task4today.R
 import com.mobdeve.s18.task4today.TaskModel
 
+// TaskAdapter - Adapter for the Child Tasks RecyclerView
 class TaskAdapter(
     private var taskList: ArrayList<TaskModel>,
     private var dbHelper : DbHelper,

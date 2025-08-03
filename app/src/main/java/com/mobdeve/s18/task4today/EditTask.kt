@@ -1,4 +1,10 @@
 package com.mobdeve.s18.task4today
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.os.Bundle
 import android.view.LayoutInflater

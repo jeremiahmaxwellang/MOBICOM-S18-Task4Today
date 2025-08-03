@@ -1,4 +1,10 @@
 package com.mobdeve.s18.task4today
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -16,7 +22,8 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-//For format_view_header_list.xml
+// Handles "Headers" Page of the Settings Fragment
+// Layout used: format_view_header_list.xml
 class HeaderGroupsList : AppCompatActivity() {
 
     private lateinit var dbHelper : DbHelper

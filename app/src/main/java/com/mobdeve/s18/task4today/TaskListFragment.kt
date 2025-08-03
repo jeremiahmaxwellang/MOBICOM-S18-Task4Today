@@ -26,6 +26,7 @@ import com.mobdeve.s18.task4today.databinding.FragmentTaskListBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
+// Task List Page (Default Page)
 class TaskListFragment : Fragment(), EditTask.DialogCloseListener {
 
     private var _binding: FragmentTaskListBinding? = null

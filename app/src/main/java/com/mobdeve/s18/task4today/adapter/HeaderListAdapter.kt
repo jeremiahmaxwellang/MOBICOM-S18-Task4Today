@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentActivity
 import com.mobdeve.s18.task4today.EditTask
 
 // HeaderListAdapter.kt
-// Adapter for the Parent Recycler View for Header
+// Adapter for the Header Parent Recycler View
 class HeaderListAdapter(
     private val headers: ArrayList<HeaderModel>,
     private val layoutResId: Int, // Parameter to allow dynamic layout

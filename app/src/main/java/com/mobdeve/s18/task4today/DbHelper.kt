@@ -1,10 +1,17 @@
 package com.mobdeve.s18.task4today
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.content.Context
 import android.content.ContentValues
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+// DbHelper - Handles Database Queries and Operations
 class DbHelper(context: Context) : SQLiteOpenHelper(
     context,
     DbReferences.DATABASE_NAME,
