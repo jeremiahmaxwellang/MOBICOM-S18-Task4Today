@@ -9,6 +9,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.R
 import com.mobdeve.s18.task4today.adapter.HeaderListAdapter
 
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
+
 // HeaderItemTouchHelper: class for swiping functionality on Headers
 class HeaderItemTouchHelper(
     private val headerAdapter: HeaderListAdapter
@@ -28,7 +35,7 @@ class HeaderItemTouchHelper(
         val context = headerAdapter.getContext()
         val position = viewHolder.bindingAdapterPosition
 
-// Ensure position is valid before proceeding with deletion
+        // Make sure position is valid before proceeding with deletion
         if (position != RecyclerView.NO_POSITION && position < headerAdapter.getHeaders().size) {
             AlertDialog.Builder(context)
                 .setTitle("Delete Task Group")
@@ -42,6 +49,10 @@ class HeaderItemTouchHelper(
 
                     // Refresh the layout after deleting the task
                     headerAdapter.refreshLayout() // This will trigger a layout refresh
+                }
+                .setNegativeButton("CANCEL") { dialog, _ ->
+                    headerAdapter.notifyItemChanged(position) // Reset swipe
+                    dialog.dismiss()
                 }
                 .show()
         } else {
@@ -68,15 +79,15 @@ class HeaderItemTouchHelper(
         val background: GradientDrawable = GradientDrawable()
 
         // EDIT COLOR: Green if SWIPE RIGHT
-        if (dX > 0) {
-            icon = ContextCompat.getDrawable(headerAdapter.getContext(), R.drawable.edit)
-            background.setColor(ContextCompat.getColor(headerAdapter.getContext(), R.color.green_confirm))
-        }
+//        if (dX > 0) {
+//            icon = ContextCompat.getDrawable(headerAdapter.getContext(), R.drawable.edit)
+//            background.setColor(ContextCompat.getColor(headerAdapter.getContext(), R.color.green_confirm))
+//        }
         // DELETE COLOR: Red if SWIPE LEFT
-        else {
+//        else {
             icon = ContextCompat.getDrawable(headerAdapter.getContext(), R.drawable.delete)
             background.setColor(ContextCompat.getColor(headerAdapter.getContext(), R.color.red_cancel))
-        }
+//        }
 
         // Set the corner radius for all edges
         background.cornerRadius = 30f  // Apply uniform rounded corners

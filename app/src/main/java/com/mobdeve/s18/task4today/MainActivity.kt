@@ -1,4 +1,10 @@
 package com.mobdeve.s18.task4today
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +13,7 @@ import com.mobdeve.s18.task4today.databinding.ActivityMainBinding
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
+// MainActivity - holds the 2 main fragments of this app
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -49,13 +56,13 @@ class MainActivity : AppCompatActivity() {
 
     // ViewPager2 Adapter
     inner class ViewPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 2
+        override fun getItemCount(): Int = 3 // Number of fragments/pages
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> TaskListFragment()
-                1 -> SettingsFragment()
-                else -> throw IllegalArgumentException("Invalid position")
+                0 -> TaskListFragment() // Replace with your fragment
+            //    1 -> CalendarFragment() // Replace with your fragment
+                else -> SettingsFragment() // Replace with your fragment
             }
         }
     }

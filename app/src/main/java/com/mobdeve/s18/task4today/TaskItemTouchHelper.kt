@@ -1,3 +1,11 @@
+package com.mobdeve.s18.task4today
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
+
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
@@ -7,9 +15,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.adapter.TaskAdapter
-import com.mobdeve.s18.task4today.R
 
-// TaskItemTouchHelper: class for swiping functionality on Tasks
+// TaskItemTouchHelper - class for swiping functionality on Tasks
 class TaskItemTouchHelper(
     private val taskAdapter: TaskAdapter
 ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -28,22 +35,38 @@ class TaskItemTouchHelper(
         val context = taskAdapter.getContext()
         val position = viewHolder.bindingAdapterPosition
 
-// Ensure position is valid before proceeding with deletion
+    // Make sure position is valid before proceeding with deletion
         if (position != RecyclerView.NO_POSITION && position < taskAdapter.getTaskList().size) {
-            AlertDialog.Builder(context)
-                .setTitle("Delete Task")
-                .setMessage("Proceed with task deletion?")
-                .setPositiveButton("CONFIRM") { dialog, _ ->
-                    taskAdapter.notifyItemChanged(position) // Reset swipe
-                    dialog.dismiss()
+            when(direction) {
+                // Swipe LEFT to DELETE
+                ItemTouchHelper.LEFT -> {
+                    AlertDialog.Builder(context)
+                        .setTitle("Delete Task")
+                        .setMessage("Proceed with task deletion?")
+                        .setPositiveButton("CONFIRM") { dialog, _ ->
+                            taskAdapter.notifyItemChanged(position) // Reset swipe
+                            dialog.dismiss()
 
-                    // Proceed with task deletion
-                    taskAdapter.deleteTask(position)
+                            // Proceed with task deletion
+                            taskAdapter.deleteTask(position)
 
-                    // Refresh the layout after deleting the task
+                            // Refresh the layout after deleting the task
+                            taskAdapter.refreshLayout() // This will trigger a layout refresh
+                        }
+                        .setNegativeButton("CANCEL") { dialog, _ ->
+                            taskAdapter.notifyItemChanged(position) // Reset swipe
+                            dialog.dismiss()
+                        }
+                        .show()
+                } // end of ItemTouchHelper.LEFT
+
+                // Swipe RIGHT to EDIT
+                ItemTouchHelper.RIGHT -> {
+                    taskAdapter.editTask(position)
                     taskAdapter.refreshLayout() // This will trigger a layout refresh
-                }
-                .show()
+                } // end of ItemTouchHelper.RIGHT
+            }
+
         } else {
             Log.e("TaskItemTouchHelper", "Invalid position during swipe: $position")
         }

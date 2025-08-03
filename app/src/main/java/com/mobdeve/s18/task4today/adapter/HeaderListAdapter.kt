@@ -1,4 +1,10 @@
 package com.mobdeve.s18.task4today.adapter
+/*
+    MOBICOM S18 Group 6
+    Jeremiah Ang
+    Charles Duelas
+    Justin Lee
+ */
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -17,8 +23,10 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s18.task4today.DbHelper
-import TaskItemTouchHelper
+import com.mobdeve.s18.task4today.TaskItemTouchHelper
 import android.util.Log
+import androidx.fragment.app.FragmentActivity
+import com.mobdeve.s18.task4today.EditTask
 
 // HeaderListAdapter.kt
 // Adapter for the Parent Recycler View for Header
@@ -26,6 +34,8 @@ class HeaderListAdapter(
     private val headers: ArrayList<HeaderModel>,
     private val layoutResId: Int, // Parameter to allow dynamic layout
     private var dbHelper : DbHelper,
+    private val activity: FragmentActivity,
+    private var dialogCloseListener: EditTask.DialogCloseListener?,
     private val listener: OnHeaderActionListener? = null // REQUIRED ADD BTN Action listener
 ) : RecyclerView.Adapter<HeaderListAdapter.HeaderViewHolder>() {
 
@@ -101,7 +111,7 @@ class HeaderListAdapter(
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(holder.itemView.context)
 
-            val taskAdapter = TaskAdapter(header.taskList, dbHelper, this.context)
+            val taskAdapter = TaskAdapter(header.taskList, dbHelper, this.context, activity, dialogCloseListener)
             adapter = taskAdapter // set adapter of taskRecyclerView
             taskAdapterMap[position] = taskAdapter // store all the taskAdapters of each header's taskRecyclerView
 

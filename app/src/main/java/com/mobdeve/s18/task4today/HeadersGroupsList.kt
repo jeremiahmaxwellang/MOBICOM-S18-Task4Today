@@ -43,7 +43,7 @@ class HeaderGroupsList : AppCompatActivity() {
         dbHelper = DbHelper(this)
         val headerList = dbHelper.getAllHeaders(currentDate)
 
-        val headerListAdapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, null)
+        val headerListAdapter = HeaderListAdapter(headerList, R.layout.format_view_header_list, dbHelper, this, null, null)
         headerRecyclerView.adapter = headerListAdapter
 
         // Set up helper for swiping headers
@@ -108,7 +108,7 @@ class HeaderGroupsList : AppCompatActivity() {
 
                 // Refresh the list
                 val updatedHeaders = dbHelper.getAllHeaders(currentDate)
-                headerRecyclerView.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, null)
+                headerRecyclerView.adapter = HeaderListAdapter(updatedHeaders, R.layout.format_view_header_list, dbHelper, this, null)
 
                 overlayAddHeader.visibility = View.GONE
                 taskNameInput.text.clear()

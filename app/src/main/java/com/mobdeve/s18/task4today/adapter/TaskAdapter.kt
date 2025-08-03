@@ -9,15 +9,19 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s18.task4today.DbHelper
+import com.mobdeve.s18.task4today.EditTask
 import com.mobdeve.s18.task4today.R
 import com.mobdeve.s18.task4today.TaskModel
 
 class TaskAdapter(
     private var taskList: ArrayList<TaskModel>,
     private var dbHelper : DbHelper,
-    private var context: Context
+    private var context: Context,
+    private var activity: FragmentActivity,
+    private var dialogCloseListener: EditTask.DialogCloseListener?
 ): RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     inner class TaskViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -38,7 +42,7 @@ class TaskAdapter(
         notifyDataSetChanged()  // Refresh the RecyclerView if needed
     }
 
-    // Getter for TaskAdapter's context (current activity)
+    // Getter for TaskAdapter's context
     fun getContext() : Context {
         return this.context
     }
@@ -94,15 +98,19 @@ class TaskAdapter(
         notifyDataSetChanged()
     }
 
-    // TODO: Edit task (Either an "Edit task" overlay should pop up, or just directly edit the task text nalang)
-    fun editTask(position: Int){
+    // Edit Tasks (Swipe Right)
+     fun editTask(position: Int){
         val task = taskList[position]
         val bundle = Bundle().apply{
             putInt("id", task.id)
             putString("task", task.task) // Edit text inside task
         }
 
-        setTasks(taskList) // Refresh displayed taskList
+        // Open Edit Task Dialog
+        val editTaskDialog = EditTask.newInstance(task.id, task.task)
+        editTaskDialog.setDialogCloseListener(dialogCloseListener)
+        editTaskDialog.show(activity.supportFragmentManager, EditTask.TAG)
+
     }
 
     // Delete task
@@ -128,15 +136,3 @@ class TaskAdapter(
         notifyDataSetChanged() // Refresh the entire RecyclerView layout
     }
 }
-
-// Sample code for editing / deleting tasks
-//fun editItem(position: Int){
-//    val item = todoList[position]
-//    val bundle = Bundle().apply{
-//        putInt("id", item.id)
-//        putString("task", item.task)
-//    }
-//
-//    val fragment = AddNewTask.Companion.newInstance(item.id, item.task)
-//    fragment.show(activity.supportFragmentManager, AddNewTask.Companion.TAG)
-//}
