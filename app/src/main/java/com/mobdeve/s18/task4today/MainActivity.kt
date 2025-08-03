@@ -25,12 +25,29 @@ class MainActivity : AppCompatActivity() {
         // Set up bottom navigation
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_tasks -> viewPager.currentItem = 0
-                R.id.nav_calendar -> viewPager.currentItem = 1
-                R.id.nav_blank -> viewPager.currentItem = 2
+                R.id.nav_tasks -> {
+                    viewPager.currentItem = 0
+                    updateBottomNavigationIcons(0)
+                }
+                R.id.nav_calendar -> {
+                    viewPager.currentItem = 1
+                    updateBottomNavigationIcons(1)
+                }
+                R.id.nav_blank -> {
+                    viewPager.currentItem = 2
+                    updateBottomNavigationIcons(2)
+                }
             }
             true
         }
+
+        // Sync ViewPager with BottomNavigation on swipe
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                updateBottomNavigationIcons(position)
+            }
+        })
     }
 
     // ViewPager2 Adapter
@@ -42,6 +59,36 @@ class MainActivity : AppCompatActivity() {
                 0 -> TaskListFragment() // Replace with your fragment
                 1 -> CalendarFragment() // Replace with your fragment
                 else -> SettingsFragment() // Replace with your fragment
+            }
+        }
+    }
+
+    // Update the bottom navigation icons based on the selected fragment
+    private fun updateBottomNavigationIcons(position: Int) {
+        when (position) {
+            0 -> {
+                binding.bottomNavigation.menu.findItem(R.id.nav_tasks)
+                    .setIcon(R.drawable.ic_tasks_clicked)
+                binding.bottomNavigation.menu.findItem(R.id.nav_calendar)
+                    .setIcon(R.drawable.ic_calendar)
+                binding.bottomNavigation.menu.findItem(R.id.nav_blank)
+                    .setIcon(R.drawable.ic_blank)
+            }
+            1 -> {
+                binding.bottomNavigation.menu.findItem(R.id.nav_tasks)
+                    .setIcon(R.drawable.ic_tasks)
+                binding.bottomNavigation.menu.findItem(R.id.nav_calendar)
+                    .setIcon(R.drawable.ic_calendar_clicked)
+                binding.bottomNavigation.menu.findItem(R.id.nav_blank)
+                    .setIcon(R.drawable.ic_blank)
+            }
+            2 -> {
+                binding.bottomNavigation.menu.findItem(R.id.nav_tasks)
+                    .setIcon(R.drawable.ic_tasks)
+                binding.bottomNavigation.menu.findItem(R.id.nav_calendar)
+                    .setIcon(R.drawable.ic_calendar)
+                binding.bottomNavigation.menu.findItem(R.id.nav_blank)
+                    .setIcon(R.drawable.ic_blank_clicked)
             }
         }
     }
