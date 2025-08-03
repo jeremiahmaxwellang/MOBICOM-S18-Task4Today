@@ -56,13 +56,13 @@ class MainActivity : AppCompatActivity() {
 
     // ViewPager2 Adapter
     inner class ViewPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
-        override fun getItemCount(): Int = 3 // Number of fragments/pages
+        override fun getItemCount(): Int = 2 // Number of fragments/pages
 
         override fun createFragment(position: Int): Fragment {
             return when (position) {
-                0 -> TaskListFragment() // Replace with your fragment
-            //    1 -> CalendarFragment() // Replace with your fragment
-                else -> SettingsFragment() // Replace with your fragment
+                0 -> TaskListFragment()
+                1 -> SettingsFragment()
+                else -> throw IllegalArgumentException("Invalid position")
             }
         }
     }
